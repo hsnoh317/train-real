@@ -1,0 +1,24 @@
+{
+  "name": "TRAIN REAL",
+  "short_name": "TRAIN REAL",
+  "description": "Pick your sport and get three gym lifts that carry over to it, with sets, reps and how-to drawings.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eceeec",
+  "theme_color": "#161a19",
+  "categories": ["sports", "health", "fitness"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Football", "url": "./#football" },
+    { "name": "Boxing", "url": "./#boxing" },
+    { "name": "Baseball", "url": "./#baseball" },
+    { "name": "Wrestling", "url": "./#wrestling" }
+  ]
+}

@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Pick your sport and get three gym lifts that carry over to it, with sets, reps and how-to drawings.">
+<meta name="theme-color" content="#eceeec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111413" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TRAIN REAL">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+/* Base reset (matches the artifact viewer's page skeleton) */
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-text-size-adjust: 100%; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>TRAIN REAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=IBM+Plex+Mono:wght@500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: gym-floor ground, a rack of bumper plates as the sport picker, then three lift cards in session order. */
+:root {
+  --bg: #eceeec;
+  --surface: #f9faf8;
+  --ink: #161a19;
+  --muted: #59625f;
+  --line: #d2d7d4;
+  --chip: #e2e6e3;
+
+  --plate-red: #d0312d;
+  --plate-blue: #1f5fbf;
+  --plate-yellow: #f0bf2c;
+  --plate-green: #2e8b47;
+  --plate-white: #f3f3f0;
+  --hub: #9aa19e;
+
+  --ink-red: #b3261e;
+  --ink-blue: #1d56ad;
+  --ink-yellow: #876700;
+  --ink-green: #22773a;
+  --ink-white: #3b4442;
+  --plate-brown: #8a5a2b;
+  --plate-orange: #ec7a1c;
+  --ink-brown: #6b4423;
+  --ink-orange: #c45f0a;
+
+  --font-display: "Saira Condensed", "Oswald", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --sport: var(--ink-blue);
+  --sport-plate: var(--plate-blue);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111413; --surface: #1a1e1d; --ink: #e8ebe9; --muted: #9aa39f; --line: #2b3230; --chip: #252b29;
+    --hub: #4b5350;
+    --ink-red: #ff7d70; --ink-blue: #84b3ff; --ink-yellow: #f2c94c; --ink-green: #72d28c; --ink-white: #e3e6e4; --ink-brown: #d8a66f; --ink-orange: #ff9b4f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111413; --surface: #1a1e1d; --ink: #e8ebe9; --muted: #9aa39f; --line: #2b3230; --chip: #252b29;
+  --hub: #4b5350;
+  --ink-red: #ff7d70; --ink-blue: #84b3ff; --ink-yellow: #f2c94c; --ink-green: #72d28c; --ink-white: #e3e6e4; --ink-brown: #d8a66f; --ink-orange: #ff9b4f;
+  color-scheme: dark;
+}
+
+/* Sport colors: pitch green, glove red, glove-and-bat brown, volleyball orange */
+[data-sport="football"]   { --sport: var(--ink-green);  --sport-plate: var(--plate-green); }
+[data-sport="boxing"]     { --sport: var(--ink-red);    --sport-plate: var(--plate-red); }
+[data-sport="baseball"]   { --sport: var(--ink-brown);  --sport-plate: var(--plate-brown); }
+[data-sport="volleyball"] { --sport: var(--ink-orange); --sport-plate: var(--plate-orange); }
+[data-sport="wrestling"]  { --sport: var(--ink-white);  --sport-plate: var(--plate-white); }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-block: 2.5rem 3rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 2rem;
+}
+
+/* Header */
+header { display: grid; gap: .6rem; }
+.eyebrow {
+  font-family: var(--font-data);
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* Logo lockup: barbell badge + forward-slanted wordmark, REAL set in a sport-colored block */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: .22em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: .82;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.logo-mark {
+  flex: 0 0 auto;
+  width: .92em;
+  height: .92em;
+  color: var(--ink);
+}
+.logo-mark svg { width: 100%; height: 100%; display: block; }
+.logo-word {
+  display: inline-flex;
+  align-items: center;
+  gap: .1em;
+  transform: skewX(-11deg);
+  letter-spacing: -.005em;
+}
+.logo-a { color: var(--ink); }
+/* Badge: same slant and height as the REAL block, lifter knocked out of a solid tile */
+.logo-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: .98em;
+  height: .94em;
+  margin-left: .02em;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: .05em;
+  transform: skewX(-11deg);
+}
+.logo-icon svg {
+  width: 84%;
+  height: 84%;
+  display: block;
+  overflow: visible;
+  transform: skewX(11deg);
+}
+.logo-b {
+  background: var(--sport);
+  color: var(--bg);
+  padding: .07em .16em .03em;
+  border-radius: .05em;
+  transition: background .25s ease;
+}
+/* Slogan: set in the logo's face and slant, with a short sport-colored rule leading in */
+.lede {
+  margin: .2rem 0 .5rem;
+  display: flex;
+  align-items: center;
+  gap: .6em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: normal;
+  font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink);
+  transform: skewX(-11deg);
+  transform-origin: left center;
+}
+.lede::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.8em;
+  height: .2em;
+  background: var(--sport);
+  transition: background .25s ease;
+}
+.steps {
+  list-style: none;
+  margin: .25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: .45rem;
+  max-width: 64ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+.steps b {
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: .8rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-right: .35rem;
+}
+
+/* Plate picker */
+.rack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.25rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--line);
+}
+.rack-label {
+  width: 100%;
+  font-family: var(--font-data);
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.plate-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: .25rem;
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: .45rem;
+  cursor: pointer;
+  color: var(--muted);
+  font: inherit;
+  border-radius: 10px;
+}
+.plate-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.pict {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--chip);
+  color: var(--muted);
+  box-shadow: inset 0 0 0 2px transparent;
+  transform: translateY(0);
+  transition: transform .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.pict svg { width: 52px; height: 52px; display: block; }
+.plate-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.plate-btn:hover .pict { transform: translateY(-3px); color: var(--ink); }
+.plate-btn[aria-selected="true"] { color: var(--ink); }
+.plate-btn[aria-selected="true"] .pict {
+  transform: translateY(-3px);
+  background: var(--surface);
+  color: var(--sport);
+  box-shadow: inset 0 0 0 2px var(--sport);
+}
+
+/* Sport panel */
+.panel { display: grid; gap: 1.5rem; }
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.panel-head > div { min-width: 0; display: grid; gap: .35rem; }
+h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--sport);
+}
+.focus { margin: 0; max-width: 58ch; font-size: 1.05rem; }
+.copy-btn {
+  appearance: none;
+  font: 600 .9rem/1 var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .7rem 1.1rem;
+  cursor: pointer;
+}
+.copy-btn:hover { border-color: var(--ink); }
+.copy-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+#copy-fallback {
+  width: 100%;
+  min-height: 10rem;
+  font: .85rem/1.5 var(--font-data);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .75rem;
+}
+
+.lifts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lift {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  gap: 1rem;
+  min-width: 0;
+}
+.lift-top { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; }
+.order {
+  font-family: var(--font-data);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.trains {
+  font-size: .8rem;
+  color: var(--muted);
+  text-align: right;
+}
+h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.85rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  margin: 0;
+  text-wrap: balance;
+}
+.rx {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem 1rem;
+  margin: 0;
+  padding-block: .75rem;
+  border-block: 1px solid var(--line);
+}
+.rx div { min-width: 0; }
+.rx .load { grid-column: 1 / -1; }
+.rx dt {
+  font-family: var(--font-data);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rx dd {
+  margin: 0;
+  font-family: var(--font-data);
+  font-size: .95rem;
+  font-variant-numeric: tabular-nums;
+}
+.rx .load dd { font-family: var(--font-body); font-size: .9rem; }
+.demo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+}
+.demo figure {
+  margin: 0;
+  min-width: 0;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: .5rem .5rem .55rem;
+  display: grid;
+  gap: .35rem;
+  align-content: start;
+}
+.demo svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 80 / 76;
+  max-height: 150px;
+  display: block;
+  margin: 0 auto;
+  color: var(--ink);
+}
+.demo figcaption {
+  font-size: .78rem;
+  line-height: 1.3;
+  color: var(--muted);
+  text-align: center;
+}
+.demo figcaption b {
+  display: block;
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: .64rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sport);
+}
+.demo .fig .ln, .demo .far {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.demo .far { opacity: .38; }
+.demo .hd { fill: currentColor; }
+.demo .eq {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.demo .eq.thick { stroke-width: 4; }
+.demo .eq.dim { opacity: .55; }
+.demo .eqf { fill: var(--muted); }
+.demo .ball { fill: var(--sport); }
+.demo .gnd { stroke: var(--line); stroke-width: 2; }
+
+.cues { margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; font-size: .93rem; }
+.cues li::marker { color: var(--muted); }
+.gear { display: flex; flex-wrap: wrap; gap: .35rem; }
+.gear span {
+  font-size: .75rem;
+  background: var(--chip);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: .2rem .6rem;
+}
+.transfer {
+  margin: 0;
+  padding: .9rem 1rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--sport-plate) 13%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--sport-plate) 40%, var(--line));
+  font-size: .93rem;
+}
+.transfer strong {
+  display: block;
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sport);
+  margin-bottom: .25rem;
+}
+
+.mail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1.25rem 2.5rem;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.mail-copy { display: grid; gap: .5rem; min-width: 0; }
+.mail-copy p { margin: 0; color: var(--muted); max-width: 52ch; }
+.mail-title {
+  font-size: clamp(1.7rem, 3.5vw, 2.2rem);
+  color: var(--ink);
+}
+.mail-form { display: grid; gap: .5rem; min-width: 0; }
+.mail-form label {
+  font-family: var(--font-data);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mail-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+#mail-to {
+  flex: 1 1 14rem;
+  min-width: 0;
+  font: 1rem var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .75rem .9rem;
+}
+#mail-to:focus-visible { outline: 2px solid var(--sport); outline-offset: 1px; border-color: transparent; }
+.mail-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 .95rem/1 var(--font-body);
+  color: var(--bg);
+  background: var(--ink);
+  border-radius: 8px;
+  padding: .8rem 1.15rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mail-btn:hover { background: var(--sport); color: var(--bg); }
+.mail-btn:focus-visible { outline: 2px solid var(--sport); outline-offset: 2px; }
+.mail-error { margin: 0; color: var(--ink-red); font-size: .9rem; }
+.mail-after { display: grid; gap: .6rem; justify-items: start; font-size: .93rem; }
+.mail-after p { margin: 0; }
+#mail-fallback {
+  width: 100%;
+  min-height: 9rem;
+  font: .85rem/1.5 var(--font-data);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .75rem;
+}
+
+.install { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.install-hint { margin: 0; font-size: .9rem; color: var(--muted); }
+.install-hint b { color: var(--ink); font-weight: 600; }
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: .9rem;
+  color: var(--muted);
+}
+.notes div { min-width: 0; }
+.notes b { display: block; color: var(--ink); font-weight: 600; margin-bottom: .2rem; }
+
+@media (max-width: 900px) {
+  .lifts { grid-template-columns: 1fr; }
+  .notes { grid-template-columns: 1fr; }
+  .mail { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .mail { padding: 1.15rem; }
+  .mail-btn { flex: 1 1 100%; }
+}
+@media (max-width: 480px) {
+  .lede { font-size: .98rem; letter-spacing: .03em; gap: .45em; }
+  .lede::before { width: 1.1em; }
+  .pict { width: 56px; height: 56px; border-radius: 13px; }
+  .pict svg { width: 40px; height: 40px; }
+  .plate-name { font-size: .82rem; letter-spacing: .02em; }
+  .rack { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem .25rem; }
+  .rack-label { grid-column: 1 / -1; }
+  .plate-btn { padding: .25rem 0; min-width: 0; }
+  h3 { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap" id="app" data-sport="baseball">
+  <header>
+    <div class="eyebrow">Sport-specific gym workout planner</div>
+    <h1 class="logo" aria-label="Train Real">
+      <span class="logo-word" aria-hidden="true"><span class="logo-a">Train</span><span class="logo-b">Real</span></span>
+      <span class="logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <!-- Raised fist, knuckles forward; tile-colored lines separate fingers, thumb and wrist -->
+          <g fill="currentColor">
+            <rect x="13" y="8" width="10.5" height="22" rx="5.25"/>
+            <rect x="23.5" y="6" width="10.5" height="24" rx="5.25"/>
+            <rect x="34" y="7" width="10.5" height="23" rx="5.25"/>
+            <rect x="44.5" y="10" width="10" height="20" rx="5"/>
+            <rect x="13" y="18" width="41.5" height="26" rx="7"/>
+            <rect x="21" y="40" width="26" height="20" rx="2"/>
+          </g>
+          <g fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23.5 10 V22 M34 9 V22 M44.5 12 V22"/>
+            <path d="M15 33 H33 Q38 33 38 27.5"/>
+            <path d="M23 44 H45"/>
+          </g>
+        </svg>
+      </span>
+    </h1>
+    <p class="lede">Lifts that transitions to your sport</p>
+    <ol class="steps">
+      <li><b>Step 1:</b>PICK YOUR SPORT</li>
+      <li><b>Step 2:</b>GET YOUR 3 MAIN EXERCISES</li>
+      <li><b>Step 3:</b>SEND THE SUGGESTED WORKOUT PLAN TO YOUR EMAIL!</li>
+    </ol>
+  </header>
+
+  <div class="install" id="install" hidden>
+    <button class="copy-btn" type="button" id="install-btn" hidden>Install the app</button>
+    <p class="install-hint" id="install-hint" hidden>Install on iPhone: tap <b>Share</b>, then <b>Add to Home Screen</b>.</p>
+  </div>
+
+  <nav class="rack" role="tablist" aria-label="Choose your sport" id="rack">
+    <div class="rack-label" id="rack-label">Step 1: Pick your sport</div>
+  </nav>
+
+  <section class="panel" id="panel" role="tabpanel" aria-live="polite">
+    <div class="panel-head">
+      <div>
+        <div class="eyebrow">Step 2: Three main lifts</div>
+        <h2 id="sport-name">Baseball</h2>
+        <p class="focus" id="sport-focus"></p>
+      </div>
+      <button class="copy-btn" id="copy-btn" type="button">Copy this session</button>
+    </div>
+    <textarea id="copy-fallback" readonly hidden aria-label="Session text to copy"></textarea>
+    <ol class="lifts" id="lifts"></ol>
+  </section>
+
+  <section class="mail" id="mail" aria-labelledby="mail-title">
+    <div class="mail-copy">
+      <div class="eyebrow">Step 3</div>
+      <h2 class="mail-title" id="mail-title">Send this workout to yourself</h2>
+      <p>Put your email address. We will send the workout plan above to your email!<span id="mail-sport" hidden></span></p>
+    </div>
+    <form class="mail-form" id="mail-form" novalidate>
+      <label for="mail-to">Your email</label>
+      <div class="mail-row">
+        <input id="mail-to" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" required>
+        <a id="mail-link" class="mail-btn" href="#mail">Email me this workout</a>
+      </div>
+      <p class="mail-error" id="mail-error" hidden>Enter a full email address, like name@example.com.</p>
+      <div class="mail-after" id="mail-after" hidden>
+        <p>Your email app should now show a draft to <b id="mail-shown"></b>. If nothing opened, copy the workout and paste it into an email to yourself.</p>
+        <button class="copy-btn" type="button" id="mail-copy">Copy the workout</button>
+        <textarea id="mail-fallback" readonly hidden aria-label="Workout text to copy"></textarea>
+      </div>
+    </form>
+  </section>
+
+  <footer class="notes">
+    <div><b>Order matters</b>Do the lifts in the order shown. Explosive work goes first while you are fresh.</div>
+    <div><b>How often</b>Twice a week alongside practice is plenty. Skip the session the day before a game.</div>
+    <div><b>Stay safe</b>Warm up for about 10 minutes first. Stop any movement that hurts and check with a coach or physio.</div>
+  </footer>
+</div>
+
+<script>
+const SPORTS = {
+  football: {
+    name: "Football",
+    arena: "On the pitch",
+    focus: "Faster acceleration, higher jumps for headers, a harder kick, and a groin that holds up to cutting.",
+    lifts: [
+      {
+        name: "Bulgarian Split Squat",
+        trains: "Quads · glutes",
+        sets: "3 × 6 each leg", rest: "90 s",
+        load: "Hard but clean, about 2 reps left in the tank",
+        gear: ["Dumbbells", "Flat bench"],
+        cues: [
+          "Back foot laces-down on the bench, front shin close to vertical.",
+          "Lower until the back knee nearly touches the floor.",
+          "Drive through the whole front foot to stand."
+        ],
+        transfer: "Sprinting, cutting and planting to shoot all happen on one leg. This builds the single-leg strength behind fast acceleration and a stable plant foot."
+      },
+      {
+        name: "Cable Standing Hip Flexion",
+        trains: "Hip flexors · core",
+        sets: "3 × 8 each leg", rest: "60 s",
+        load: "Light to moderate: fast forward, slow back",
+        gear: ["Cable station", "Ankle strap"],
+        cues: [
+          "Strap the low cable to your ankle, face away from the pulley, and hold the frame for balance.",
+          "Stand tall and drive the knee up and forward fast, like the follow-through of a kick.",
+          "Lower slowly with control. Don't lean back."
+        ],
+        transfer: "Swinging the thigh forward fast is the motion behind a shot or long pass, and the knee drive in every sprint stride."
+      },
+      {
+        name: "Copenhagen Plank",
+        trains: "Adductors · obliques",
+        sets: "3 × 20–30 s each side", rest: "60 s",
+        load: "Bodyweight: start with the knee on the bench, progress to the ankle",
+        gear: ["Flat bench"],
+        cues: [
+          "Lie on your side with your top knee (or ankle) on the bench and your forearm on the floor.",
+          "Lift your hips until your body is in a straight line.",
+          "Hold steady without letting your hips sag."
+        ],
+        transfer: "Strong inner thighs protect the groin during side-foot passes, quick changes of direction and stretching into a tackle. Soccer teams widely use it to cut groin injuries."
+      }
+    ]
+  },
+  baseball: {
+    name: "Baseball",
+    arena: "On the field",
+    focus: "Rotational power for the swing and a shoulder that holds up to throwing.",
+    lifts: [
+      {
+        name: "Med Ball Rotational Scoop Toss",
+        trains: "Hips · obliques",
+        sets: "4 × 5 each side", rest: "60 s",
+        load: "Light ball, 4–6 lb (2–3 kg), max intent",
+        gear: ["Medicine ball", "Solid wall"],
+        cues: [
+          "Stand side-on to the wall as if you're in the box.",
+          "Load the back hip, then turn the hips before the arms.",
+          "Throw into the wall as hard as you can. Catch and reset."
+        ],
+        transfer: "It trains the hips, then torso, then arms sequence of a swing and a throw, at game speed."
+      },
+      {
+        name: "Cable Woodchopper",
+        trains: "Obliques · hips · lats",
+        sets: "3 × 8 each side", rest: "60 s",
+        load: "Moderate: fast on the pull, slow on the return",
+        gear: ["Cable station", "Single handle"],
+        cues: [
+          "Pulley at shoulder height, both hands on the handle, arms long.",
+          "Rotate from the back hip and pivot the back foot, pulling across and slightly down.",
+          "Control the handle back. Don't let it yank you."
+        ],
+        transfer: "Pulling across the body from the back hip builds the rotational power that turns into bat speed through the hitting zone."
+      },
+      {
+        name: "Face Pull with External Rotation",
+        trains: "Rear delts · rotator cuff",
+        sets: "3 × 12–15", rest: "45 s",
+        load: "Light, feel the upper back working",
+        gear: ["Cable station", "Rope attachment"],
+        cues: [
+          "Pulley at upper-chest height, thumbs pointing back.",
+          "Pull toward your eyes with elbows high, then rotate hands up and back.",
+          "Pause for one second and return slowly."
+        ],
+        transfer: "It strengthens the rear shoulder and rotator cuff that slow your arm after release, which helps keep a thrower's shoulder healthy."
+      }
+    ]
+  },
+  boxing: {
+    name: "Boxing",
+    arena: "In the ring",
+    focus: "Punching power from the ground up, a braced core, and shoulders that last every round.",
+    lifts: [
+      {
+        name: "Landmine Rotational Punch",
+        trains: "Hips · core · shoulders",
+        sets: "4 × 5 each side", rest: "90 s",
+        load: "Light, speed over weight",
+        gear: ["Barbell", "Landmine attachment"],
+        cues: [
+          "Fighting stance, bar end held at the rear shoulder.",
+          "Drive the rear foot, turn the hip, then extend the arm.",
+          "Return under control to your guard."
+        ],
+        transfer: "Force starts at the rear foot and travels through the hip into the fist. This loads that exact chain behind a cross."
+      },
+      {
+        name: "Pallof Press",
+        trains: "Deep core · obliques",
+        sets: "3 × 10 each side, 2 s hold", rest: "45 s",
+        load: "Moderate, no twisting allowed",
+        gear: ["Cable station", "Single handle"],
+        cues: [
+          "Stand side-on to a chest-height pulley, feet at stance width.",
+          "Press the handle straight out and hold. Don't let it pull you round.",
+          "Brace as if you're about to take a body shot."
+        ],
+        transfer: "Resisting rotation trains the brace that absorbs body shots and keeps you balanced while you throw and slip."
+      },
+      {
+        name: "Battle Rope Alternating Waves",
+        trains: "Shoulders · conditioning",
+        sets: "6 × 20 s on / 40 s off", rest: "Built in",
+        load: "Max effort every round",
+        gear: ["Battle ropes"],
+        cues: [
+          "Athletic stance, knees soft, hands at hip height.",
+          "Alternate arms fast and keep the waves reaching the anchor.",
+          "Breathe out in rhythm, the way you exhale on punches."
+        ],
+        transfer: "Short, hard intervals with the shoulders working nonstop build the endurance to keep your hands up late in a round."
+      }
+    ]
+  },
+  volleyball: {
+    name: "Volleyball",
+    arena: "On the court",
+    focus: "A higher vertical and a harder arm swing.",
+    lifts: [
+      {
+        name: "Box Jump",
+        trains: "Quads · glutes · calves",
+        sets: "4 × 4", rest: "90 s",
+        load: "A box you can land on quietly, 20–30 in (50–75 cm)",
+        gear: ["Plyo box"],
+        cues: [
+          "Fast arm swing and dip, like a block jump.",
+          "Land soft in a half squat on top of the box.",
+          "Step down, don't jump down. Reset each rep."
+        ],
+        transfer: "The fast arm swing and countermovement are the same pattern as your approach jump and your block."
+      },
+      {
+        name: "Medicine Ball Overhead Slam",
+        trains: "Lats · abs",
+        sets: "3 × 6", rest: "60 s",
+        load: "Slam ball, 8–15 lb (4–7 kg), max intent",
+        gear: ["Slam ball"],
+        cues: [
+          "Reach the ball fully overhead and rise onto your toes.",
+          "Slam it down by pulling with your lats and crunching your abs.",
+          "Pick it up with a flat back and repeat."
+        ],
+        transfer: "The full overhead reach and hard downward pull mirror a spike and the contact point of a jump serve."
+      },
+      {
+        name: "Trap Bar Jump",
+        trains: "Hips · quads · calves",
+        sets: "4 × 4", rest: "2 min",
+        load: "Light: 20–30% of your trap bar deadlift",
+        gear: ["Trap bar", "Bumper plates"],
+        cues: [
+          "Stand in the center of the bar, hips back, chest tall.",
+          "Dip fast and jump straight up as high as you can.",
+          "Land soft with knees bent. Reset fully before the next rep."
+        ],
+        transfer: "Jumping with extra load trains the fast hip, knee and ankle extension behind your approach jump and your block, so you get higher off the floor."
+      }
+    ]
+  },
+  wrestling: {
+    name: "Wrestling",
+    arena: "On the mat",
+    focus: "Strength to lift and finish, hip drive for bridging and shots, and a grip that doesn't let go.",
+    lifts: [
+      {
+        name: "Zercher Squat",
+        trains: "Quads · upper back · arms",
+        sets: "4 × 5", rest: "2 min",
+        load: "Heavy but controlled",
+        gear: ["Barbell", "Squat rack", "Bar pad (optional)"],
+        cues: [
+          "Hold the bar in the crook of your elbows, hands together.",
+          "Squat down between your knees, chest up.",
+          "Stand by driving the hips forward and hugging the bar in."
+        ],
+        transfer: "Holding a load tight to your torso is how you lift an opponent out of a body lock or finish a double-leg."
+      },
+      {
+        name: "Barbell Hip Thrust",
+        trains: "Glutes · hamstrings",
+        sets: "3 × 8", rest: "90 s",
+        load: "Moderate to heavy",
+        gear: ["Barbell", "Flat bench", "Bar pad"],
+        cues: [
+          "Upper back on the bench, padded bar across the hips.",
+          "Drive through the heels until the hips are fully locked out.",
+          "Squeeze the glutes for one second at the top."
+        ],
+        transfer: "Powerful hip extension drives your bridge off your back, the hip heist on escapes, and the push through a shot."
+      },
+      {
+        name: "Towel Pull-Up",
+        trains: "Grip · lats · biceps",
+        sets: "3 × max, stop 1–2 reps short", rest: "2 min",
+        load: "Bodyweight; add a dip belt at 10+ reps",
+        gear: ["Pull-up bar", "Two gym towels"],
+        cues: [
+          "Drape two towels over the bar and squeeze one in each hand.",
+          "Pull until your chin passes your hands.",
+          "Lower slowly over 3 seconds."
+        ],
+        transfer: "Crushing a thick, shifting grip builds the hand strength for hand fighting, collar ties, and holding a lock."
+      }
+    ]
+  }
+};
+
+/* Pictograms: stroked limbs on a 64-unit grid, solid heads and balls. */
+const HEAD = (x, y) => '<circle cx="' + x + '" cy="' + y + '" r="5.5" fill="currentColor" stroke="none"/>';
+const PICTOGRAMS = {
+  // Striker mid-kick, ball at the boot
+  football:
+    HEAD(33, 9) +
+    '<path d="M31 18 L27 34"/>' +
+    '<path d="M16 25 L30 20 L42 27"/>' +
+    '<path d="M27 34 L24 46 L19 58"/>' +
+    '<path d="M27 34 L38 42 L46 50"/>' +
+    '<circle cx="54" cy="54" r="5.5" fill="currentColor" stroke="none"/>',
+  // Batter loaded, bat up over the back shoulder
+  baseball:
+    HEAD(24, 11) +
+    '<path d="M26 18 L30 36"/>' +
+    '<path d="M27 21 L35 28 L40 22"/>' +
+    '<path d="M40 22 L54 6" stroke-width="6"/>' +
+    '<path d="M30 36 L22 47 L17 58"/>' +
+    '<path d="M30 36 L39 46 L44 58"/>',
+  // Boxer throwing a straight punch, rear hand at the chin
+  boxing:
+    HEAD(22, 14) +
+    '<path d="M25 21 L30 38"/>' +
+    '<path d="M26 23 L39 24 L48 23"/>' +
+    '<circle cx="53" cy="23" r="5.5" fill="currentColor" stroke="none"/>' +
+    '<path d="M26 24 L22 32 L18 26"/>' +
+    '<circle cx="16" cy="24" r="4.5" fill="currentColor" stroke="none"/>' +
+    '<path d="M30 38 L22 48 L16 58"/>' +
+    '<path d="M30 38 L38 48 L43 58"/>',
+  // Hitter in the air, arm up to spike the ball
+  volleyball:
+    HEAD(27, 15) +
+    '<path d="M29 22 L27 38"/>' +
+    '<path d="M29 24 L37 14 L42 6"/>' +
+    '<path d="M29 25 L19 27 L13 22"/>' +
+    '<circle cx="51" cy="8" r="5.5" fill="currentColor" stroke="none"/>' +
+    '<path d="M27 38 L19 45 L13 52"/>' +
+    '<path d="M27 38 L35 47 L29 56"/>',
+  // Two wrestlers locked in a tie-up on the mat
+  wrestling:
+    HEAD(24, 13) + HEAD(40, 13) +
+    '<path d="M26 22 L18 40"/>' +
+    '<path d="M38 22 L46 40"/>' +
+    '<path d="M26 24 L33 31 L39 24"/>' +
+    '<path d="M38 24 L31 31 L25 24"/>' +
+    '<path d="M18 40 L11 49 L7 57"/>' +
+    '<path d="M18 40 L24 49 L22 57"/>' +
+    '<path d="M46 40 L53 49 L57 57"/>' +
+    '<path d="M46 40 L40 49 L42 57"/>' +
+    '<path d="M3 61 L61 61" stroke-width="3" opacity=".45"/>'
+};
+
+/* ART-START: start/finish drawings for each exercise, on an 80 × 76 grid (ground at y = 69). */
+const pt = p => p[0] + " " + p[1];
+const L = (pts, cls) => '<path class="' + (cls || "ln") + '" d="M' + pts.map(pt).join(" L") + '"/>';
+const EQ = d => '<path class="eq" d="' + d + '"/>';
+const EQ2 = d => '<path class="eq dim" d="' + d + '"/>';
+const BALL = (x, y, r) => '<circle class="ball" cx="' + x + '" cy="' + y + '" r="' + (r || 5) + '"/>';
+const PLATE = (x, y, r) => '<circle class="eq" cx="' + x + '" cy="' + y + '" r="' + r + '"/><circle class="eqf" cx="' + x + '" cy="' + y + '" r="1.8"/>';
+const PULLEY = (x, y) => '<circle class="eq" cx="' + x + '" cy="' + y + '" r="2.6"/>';
+const DB = (x, y) => '<path class="eq" d="M' + (x - 5) + " " + y + " H" + (x + 5) + '"/><path class="eq thick" d="M' + (x - 5) + " " + (y - 3) + " V" + (y + 3) + " M" + (x + 5) + " " + (y - 3) + " V" + (y + 3) + '"/>';
+/* fig(head, shoulder, hip, arms[[elbow, hand]], legs[[knee, foot]]) */
+function fig(h, s, p, arms, legs) {
+  let out = '<g class="fig">' + L([s, p]);
+  arms.forEach(a => { out += L([s, a[0], a[1]]); });
+  legs.forEach(l => { out += L([p, l[0], l[1]]); });
+  return out + '<circle class="hd" cx="' + h[0] + '" cy="' + h[1] + '" r="5"/></g>';
+}
+const STAND_LEGS = [[[41, 53], [42, 68]], [[39, 53], [38, 68]]];
+const WALL = EQ("M75 -2 V69");
+const COL_L = EQ("M6 -2 V69");
+const COL_R = EQ("M74 -2 V69");
+
+const ART = {
+  "Med Ball Rotational Scoop Toss": {
+    labels: ["Load the back hip", "Turn and throw"],
+    a: WALL + fig([36, 13], [37, 21], [38, 39], [[[30, 30], [24, 38]], [[32, 31], [25, 39]]], [[[30, 53], [27, 68]], [[46, 53], [49, 68]]]) + BALL(20, 40),
+    b: WALL + fig([43, 12], [42, 20], [39, 38], [[[52, 21], [61, 21]], [[52, 23], [61, 23]]], [[[33, 53], [30, 68]], [[47, 53], [50, 68]]]) + BALL(69, 21)
+  },
+  "Cable Woodchopper": {
+    labels: ["Arms long to the pulley", "Rotate across"],
+    a: COL_L + PULLEY(9, 22) + EQ("M9 22 L20 25") + fig([39, 12], [40, 20], [40, 38], [[[30, 23], [20, 25]], [[31, 26], [20, 25]]], [[[33, 53], [30, 68]], [[47, 53], [50, 68]]]),
+    b: COL_L + PULLEY(9, 22) + EQ("M9 22 L58 37") + fig([42, 12], [41, 20], [40, 38], [[[50, 28], [58, 37]], [[49, 31], [58, 37]]], [[[33, 54], [32, 68]], [[47, 53], [50, 68]]])
+  },
+  "Face Pull with External Rotation": {
+    labels: ["Arms straight", "Pull to the face"],
+    a: COL_R + PULLEY(71, 20) + EQ("M71 20 L58 21") + fig([33, 11], [34, 19], [33, 37], [[[46, 20], [58, 21]], [[46, 22], [58, 21]]], [[[35, 52], [37, 68]], [[31, 52], [29, 68]]]),
+    b: COL_R + PULLEY(71, 20) + EQ("M71 20 L28 8") + fig([33, 11], [34, 19], [33, 37], [[[24, 19], [28, 8]], [[25, 20], [29, 9]]], [[[35, 52], [37, 68]], [[31, 52], [29, 68]]])
+  },
+  "Landmine Rotational Punch": {
+    labels: ["Bar at rear shoulder", "Drive and punch"],
+    a: '<circle class="eqf" cx="76" cy="67" r="2.4"/>' + EQ("M38 22 L76 67") + fig([33, 12], [35, 20], [34, 38], [[[32, 30], [38, 22]], [[41, 28], [41, 19]]], [[[42, 52], [46, 68]], [[26, 52], [22, 68]]]),
+    b: '<circle class="eqf" cx="76" cy="67" r="2.4"/>' + EQ("M53 8 L76 67") + fig([42, 11], [41, 19], [36, 37], [[[47, 13], [53, 8]], [[40, 28], [42, 20]]], [[[44, 52], [47, 68]], [[28, 51], [22, 66]]])
+  },
+  "Pallof Press": {
+    labels: ["Handle at chest", "Press out and hold"],
+    a: EQ2("M30 -2 V69") + PULLEY(30, 27) + EQ("M30 27 L46 27") + fig([34, 12], [35, 20], [34, 38], [[[39, 31], [46, 27]], [[40, 32], [46, 27]]], [[[40, 52], [40, 68]], [[30, 52], [28, 68]]]),
+    b: EQ2("M30 -2 V69") + PULLEY(30, 27) + EQ("M30 27 L59 25") + fig([34, 12], [35, 20], [34, 38], [[[47, 23], [59, 25]], [[47, 24], [59, 25]]], [[[40, 52], [40, 68]], [[30, 52], [28, 68]]])
+  },
+  "Battle Rope Alternating Waves": {
+    labels: ["Near arm up", "Far arm up"],
+    a: '<circle class="eqf" cx="77" cy="60" r="2.4"/>' + EQ("M46 46 Q53 56 62 52 T77 61") + L([[32, 27], [39, 40], [46, 46]], "far") +
+       EQ("M46 26 Q53 14 60 30 T77 58") + fig([30, 20], [32, 27], [28, 44], [[[39, 30], [46, 26]]], [[[38, 54], [36, 68]], [[24, 56], [20, 68]]]),
+    b: '<circle class="eqf" cx="77" cy="60" r="2.4"/>' + EQ("M46 26 Q53 14 60 30 T77 58") + L([[32, 27], [39, 30], [46, 26]], "far") +
+       EQ("M46 46 Q53 56 62 52 T77 61") + fig([30, 20], [32, 27], [28, 44], [[[39, 40], [46, 46]]], [[[38, 54], [36, 68]], [[24, 56], [20, 68]]])
+  },
+  "Box Jump": {
+    labels: ["Dip, arms back", "Land soft on top"],
+    a: EQ("M50 48 H78 V69 H50 Z") + fig([26, 22], [28, 29], [22, 44], [[[22, 37], [16, 43]], [[24, 38], [18, 45]]], [[[32, 55], [28, 68]], [[30, 56], [25, 68]]]),
+    b: EQ("M50 48 H78 V69 H50 Z") + fig([66, 10], [62, 18], [56, 32], [[[69, 22], [75, 24]], [[68, 24], [74, 26]]], [[[67, 39], [60, 47]], [[69, 40], [64, 47]]])
+  },
+  "Medicine Ball Overhead Slam": {
+    labels: ["Ball overhead, tall", "Slam it down"],
+    a: fig([37, 17], [38, 25], [38, 42], [[[46, 17], [49, 7]], [[45, 18], [48, 8]]], [[[39, 55], [40, 68]], [[37, 55], [36, 68]]]) + BALL(50, 2, 4.5),
+    b: fig([53, 30], [47, 33], [32, 43], [[[52, 44], [55, 55]], [[50, 44], [53, 55]]], [[[38, 56], [36, 68]], [[30, 56], [28, 68]]]) + BALL(57, 63)
+  },
+  "Trap Bar Jump": {
+    labels: ["Hips back, grip the handles", "Jump tall"],
+    a: fig([44, 26], [40, 32], [28, 44], [[[40, 45], [37, 57]], [[39, 45], [36, 57]]], [[[38, 54], [34, 68]], [[36, 55], [32, 68]]]) + PLATE(36, 60, 9),
+    b: fig([37, 5], [37, 13], [36, 31], [[[37, 22], [37, 32]], [[36, 22], [36, 32]]], [[[37, 45], [37, 58]], [[35, 45], [34, 58]]]) + PLATE(37, 35, 9) +
+       EQ2("M28 64 H46")
+  },
+  "Bulgarian Split Squat": {
+    labels: ["Back foot on bench", "Lower the back knee"],
+    a: EQ("M4 47 H28 V51 H4 Z M8 51 V69 M24 51 V69") + fig([40, 12], [40, 20], [40, 38], [[[40, 29], [41, 38]]], [[[46, 53], [48, 68]], [[33, 49], [24, 46]]]) + DB(41, 39),
+    b: EQ("M4 47 H28 V51 H4 Z M8 51 V69 M24 51 V69") + fig([43, 25], [42, 33], [40, 50], [[[42, 42], [43, 51]]], [[[54, 52], [55, 68]], [[32, 64], [24, 46]]]) + DB(43, 52)
+  },
+  "Cable Standing Hip Flexion": {
+    labels: ["Strap on, leg back", "Drive the knee up"],
+    a: COL_L + PULLEY(9, 64) + EQ("M9 64 L32 66") + fig([40, 12], [40, 20], [40, 38], [[[38, 29], [37, 38]], [[42, 29], [44, 37]]], [[[41, 53], [42, 68]], [[37, 53], [32, 66]]]),
+    b: COL_L + PULLEY(9, 64) + EQ("M9 64 L53 49") + fig([40, 12], [40, 20], [40, 38], [[[35, 28], [31, 34]], [[46, 27], [50, 31]]], [[[41, 53], [42, 68]], [[52, 34], [53, 49]]])
+  },
+  "Copenhagen Plank": {
+    labels: ["Top leg on bench", "Lift hips in line"],
+    a: EQ("M54 40 H78 V44 H54 Z M58 44 V69 M74 44 V69") + fig([6, 56], [13, 57], [34, 63], [[[13, 68], [23, 68]]], [[[50, 52], [66, 39]], [[48, 66], [62, 67]]]),
+    b: EQ("M54 40 H78 V44 H54 Z M58 44 V69 M74 44 V69") + fig([5, 59], [13, 57], [38, 49], [[[13, 68], [23, 68]]], [[[52, 44], [66, 39]], [[48, 58], [58, 64]]])
+  },
+  "Zercher Squat": {
+    labels: ["Bar in the elbows", "Squat between the knees"],
+    a: fig([40, 12], [40, 20], [40, 38], [[[46, 32], [44, 24]], [[45, 33], [43, 25]]], STAND_LEGS) + PLATE(47, 31, 7),
+    b: fig([44, 27], [40, 34], [30, 51], [[[50, 44], [48, 36]], [[49, 45], [47, 37]]], [[[48, 53], [44, 68]], [[46, 54], [42, 68]]]) + PLATE(51, 43, 7)
+  },
+  "Barbell Hip Thrust": {
+    labels: ["Back on bench, hips low", "Drive hips to lockout"],
+    a: EQ("M2 52 H20 V56 H2 Z M6 56 V69 M16 56 V69") + fig([11, 48], [18, 52], [30, 64], [[[24, 58], [29, 58]]], [[[42, 54], [46, 68]], [[40, 55], [44, 68]]]) + PLATE(30, 58, 7),
+    b: EQ("M2 52 H20 V56 H2 Z M6 56 V69 M16 56 V69") + fig([11, 49], [18, 52], [34, 50], [[[24, 46], [33, 43]]], [[[48, 52], [49, 68]], [[46, 53], [47, 68]]]) + PLATE(34, 43, 7)
+  },
+  "Towel Pull-Up": {
+    labels: ["Dead hang on towels", "Chin past the hands"],
+    a: EQ("M20 0 H60") + EQ2("M34 0 V14 M46 0 V14") + fig([40, 21], [40, 28], [40, 46], [[[33, 21], [34, 14]], [[47, 21], [46, 14]]], [[[38, 56], [37, 65]], [[42, 56], [43, 65]]]),
+    b: EQ("M20 0 H60") + EQ2("M34 0 V14 M46 0 V14") + fig([40, 9], [40, 17], [40, 35], [[[29, 22], [34, 14]], [[51, 22], [46, 14]]], [[[39, 46], [38, 57]], [[41, 46], [42, 57]]])
+  }
+};
+/* ART-END */
+
+function demoSVG(inner, label) {
+  return '<svg viewBox="0 -4 80 76" role="img" aria-label="' + label + '"><path class="gnd" d="M2 69.5 H78"/>' + inner + "</svg>";
+}
+
+const ORDER = ["football", "boxing", "baseball", "wrestling", "volleyball"];
+const ORDINALS = ["1st", "2nd", "3rd"];
+const app = document.getElementById("app");
+const rack = document.getElementById("rack");
+const panel = document.getElementById("panel");
+const liftsEl = document.getElementById("lifts");
+const copyBtn = document.getElementById("copy-btn");
+const fallback = document.getElementById("copy-fallback");
+let current = "baseball";
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+ORDER.forEach(key => {
+  const b = el("button", "plate-btn");
+  b.type = "button";
+  b.id = "tab-" + key;
+  b.dataset.k = key;
+  b.setAttribute("role", "tab");
+  b.setAttribute("aria-controls", "panel");
+  const pict = el("span", "pict");
+  pict.innerHTML = '<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' + PICTOGRAMS[key] + "</g></svg>";
+  b.append(pict, el("span", "plate-name", SPORTS[key].name));
+  b.addEventListener("click", () => select(key, true));
+  b.addEventListener("keydown", e => {
+    const i = ORDER.indexOf(key);
+    let j = null;
+    if (e.key === "ArrowRight") j = (i + 1) % ORDER.length;
+    if (e.key === "ArrowLeft") j = (i - 1 + ORDER.length) % ORDER.length;
+    if (j !== null) { e.preventDefault(); select(ORDER[j], true); document.getElementById("tab-" + ORDER[j]).focus(); }
+  });
+  rack.append(b);
+});
+
+function render(key) {
+  const s = SPORTS[key];
+  document.getElementById("sport-name").textContent = s.name;
+  document.getElementById("sport-focus").textContent = s.focus;
+  panel.setAttribute("aria-labelledby", "tab-" + key);
+  liftsEl.replaceChildren();
+  s.lifts.forEach((l, i) => {
+    const li = el("li", "lift");
+
+    const top = el("div", "lift-top");
+    top.append(el("span", "order", ORDINALS[i]), el("span", "trains", l.trains));
+
+    const rx = el("dl", "rx");
+    [["Sets × reps", l.sets, ""], ["Rest", l.rest, ""], ["Load", l.load, "load"]].forEach(([k, v, c]) => {
+      const d = el("div", c);
+      d.append(el("dt", null, k), el("dd", null, v));
+      rx.append(d);
+    });
+
+    const cues = el("ul", "cues");
+    l.cues.forEach(c => cues.append(el("li", null, c)));
+
+    const bottom = el("div");
+    bottom.style.display = "grid";
+    bottom.style.gap = ".75rem";
+    const gear = el("div", "gear");
+    l.gear.forEach(g => gear.append(el("span", null, g)));
+    const tr = el("p", "transfer");
+    tr.append(el("strong", null, s.arena), document.createTextNode(l.transfer));
+    bottom.append(gear, tr);
+
+    const demo = el("div", "demo");
+    const art = ART[l.name];
+    if (art) {
+      [["a", 0], ["b", 1]].forEach(([k, i]) => {
+        const f = el("figure");
+        f.innerHTML = demoSVG(art[k], (i ? "Finish" : "Start") + " position: " + art.labels[i]);
+        const cap = el("figcaption");
+        cap.append(el("b", null, i ? "Finish" : "Start"), document.createTextNode(art.labels[i]));
+        f.append(cap);
+        demo.append(f);
+      });
+    }
+
+    li.append(top, el("h3", null, l.name), demo, rx, cues, bottom);
+    liftsEl.append(li);
+  });
+}
+
+function select(key, push) {
+  if (!SPORTS[key]) key = "baseball";
+  current = key;
+  app.dataset.sport = key;
+  ORDER.forEach(k => {
+    const b = document.getElementById("tab-" + k);
+    const on = k === key;
+    b.setAttribute("aria-selected", on ? "true" : "false");
+    b.tabIndex = on ? 0 : -1;
+  });
+  render(key);
+  fallback.hidden = true;
+  copyBtn.textContent = "Copy this session";
+  mailAfter.hidden = true;
+  mailFallback.hidden = true;
+  mailCopy.textContent = "Copy the workout";
+  updateMail();
+  if (push && location.hash !== "#" + key) {
+    try { history.replaceState(null, "", "#" + key); } catch (e) { location.hash = key; }
+  }
+}
+
+function sessionText(key) {
+  const s = SPORTS[key];
+  const lines = ["TRAIN REAL: " + s.name + " gym workout", s.focus, ""];
+  s.lifts.forEach((l, i) => {
+    lines.push((i + 1) + ". " + l.name + "  |  " + l.sets + "  |  rest " + l.rest);
+    lines.push("   Load: " + l.load);
+    l.cues.forEach(c => lines.push("   - " + c));
+    lines.push("   Why: " + l.transfer, "");
+  });
+  lines.push(
+    "Order: do the lifts in the order shown. Explosive work goes first while you are fresh.",
+    "How often: twice a week alongside practice. Skip the session the day before a game.",
+    "Stay safe: warm up for about 10 minutes first. Stop any movement that hurts and check with a coach or physio."
+  );
+  return lines.join("\n").trim();
+}
+
+function copyText(text, btn, box, idle) {
+  const showFallback = () => {
+    box.value = text;
+    box.hidden = false;
+    box.focus();
+    box.select();
+    btn.textContent = "Select and copy the text below";
+  };
+  try {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "Copied";
+      setTimeout(() => { btn.textContent = idle; }, 1800);
+    }, showFallback);
+  } catch (e) { showFallback(); }
+}
+
+copyBtn.addEventListener("click", () => copyText(sessionText(current), copyBtn, fallback, "Copy this session"));
+
+/* Step 4: email. The page can't send mail itself, so it opens the viewer's email app with a ready draft. */
+const mailForm = document.getElementById("mail-form");
+const mailTo = document.getElementById("mail-to");
+const mailLink = document.getElementById("mail-link");
+const mailErr = document.getElementById("mail-error");
+const mailAfter = document.getElementById("mail-after");
+const mailShown = document.getElementById("mail-shown");
+const mailCopy = document.getElementById("mail-copy");
+const mailFallback = document.getElementById("mail-fallback");
+const mailSport = document.getElementById("mail-sport");
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function mailHref() {
+  const to = mailTo.value.trim();
+  if (!EMAIL_RE.test(to)) return null;
+  const s = SPORTS[current];
+  return "mailto:" + encodeURIComponent(to).replace(/%40/g, "@") +
+    "?subject=" + encodeURIComponent("TRAIN REAL: " + s.name + " gym workout") +
+    "&body=" + encodeURIComponent(sessionText(current));
+}
+function updateMail() {
+  const h = mailHref();
+  mailLink.href = h || "#mail";
+  mailSport.textContent = SPORTS[current].name;
+  if (h) mailErr.hidden = true;
+}
+mailTo.addEventListener("input", updateMail);
+mailLink.addEventListener("click", e => {
+  const h = mailHref();
+  if (!h) {
+    e.preventDefault();
+    mailErr.hidden = false;
+    mailTo.focus();
+    return;
+  }
+  mailLink.href = h;
+  mailShown.textContent = mailTo.value.trim();
+  mailAfter.hidden = false;
+});
+mailForm.addEventListener("submit", e => { e.preventDefault(); mailLink.click(); });
+mailCopy.addEventListener("click", () => copyText(sessionText(current), mailCopy, mailFallback, "Copy the workout"));
+
+/* App install: Chrome/Android offer a prompt; iPhone needs Share → Add to Home Screen. Hidden once installed. */
+const installBox = document.getElementById("install");
+const installBtn = document.getElementById("install-btn");
+const installHint = document.getElementById("install-hint");
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+let installEvent = null;
+if (!isStandalone() && isIOS) { installHint.hidden = false; installBox.hidden = false; }
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  installEvent = e;
+  installBtn.hidden = false;
+  installBox.hidden = false;
+});
+installBtn.addEventListener("click", async () => {
+  if (!installEvent) return;
+  installEvent.prompt();
+  try { await installEvent.userChoice; } catch (e) {}
+  installEvent = null;
+  installBtn.hidden = true;
+  if (installHint.hidden) installBox.hidden = true;
+});
+window.addEventListener("appinstalled", () => { installBox.hidden = true; });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+window.addEventListener("hashchange", () => select(location.hash.slice(1), false));
+select(location.hash.slice(1) || "baseball", false);
+</script>
+
+</body>
+</html>
