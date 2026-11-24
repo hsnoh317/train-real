@@ -38,14 +38,14 @@ img { max-width: 100%; }
   --plate-blue: #1f5fbf;
   --plate-yellow: #f0bf2c;
   --plate-green: #2e8b47;
-  --plate-white: #f3f3f0;
+  --plate-white: #0f1211;   /* wrestling: black */
   --hub: #9aa19e;
 
   --ink-red: #b3261e;
   --ink-blue: #1d56ad;
   --ink-yellow: #876700;
   --ink-green: #22773a;
-  --ink-white: #3b4442;
+  --ink-white: #0f1211;     /* wrestling: black */
   --plate-brown: #8a5a2b;
   --plate-orange: #ec7a1c;
   --ink-brown: #6b4423;
@@ -824,6 +824,8 @@ body::before {
   box-shadow: none;
 }
 .sport-row .pict svg { width: 44px; height: 44px; }
+/* Wrestling: a black tile with a white stick figure, in both themes */
+.sport-row[data-sport="wrestling"] .pict { background: #0f1211; color: #ffffff; box-shadow: inset 0 0 0 1px var(--line); }
 .sport-text { display: grid; gap: .15rem; min-width: 0; }
 .sport-name {
   font-family: var(--font-display);
