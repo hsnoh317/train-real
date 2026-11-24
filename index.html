@@ -684,26 +684,21 @@ body::before {
 }
 .back::before { content: "‹"; font-size: 1.3em; line-height: .8; }
 .back:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* Small copy of the full logo (wordmark + fist badge) used on every screen after the welcome */
 .mini-logo {
   justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: .22em;
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 1.15rem;
+  line-height: .82;
   text-transform: uppercase;
-  letter-spacing: -.005em;
-  color: var(--ink);
-  transform: skewX(-11deg);
   white-space: nowrap;
 }
-.mini-logo b {
-  font-weight: 900;
-  background: var(--sport);
-  color: var(--bg);
-  padding: .05em .16em .02em;
-  border-radius: .05em;
-  transition: background .25s ease;
-}
-.screen-body > .mini-logo { justify-self: start; font-size: 1.35rem; }
+.mini-logo .logo-b { transition: background .25s ease; }
+.screen-body > .mini-logo { justify-self: start; font-size: 1.6rem; }
 .progress {
   display: grid;
   gap: .3rem;
@@ -925,7 +920,7 @@ body::before {
   <!-- 2. Intro: what the app does -->
   <section class="screen" id="s-intro" aria-labelledby="intro-title" hidden>
     <div class="screen-body">
-      <div class="mini-logo" aria-hidden="true">Train <b>Real</b></div>
+      <div class="mini-logo" aria-hidden="true"></div>
       <h2 class="intro-title" id="intro-title">Sport-specific gym workout planner</h2>
       <ol class="step-cards">
         <li>
@@ -958,7 +953,7 @@ body::before {
   <section class="screen" id="s-pick" aria-labelledby="pick-title" hidden>
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
-      <span class="mini-logo" aria-hidden="true">Train <b>Real</b></span>
+      <span class="mini-logo" aria-hidden="true"></span>
       <span class="progress"><span>Step 1 of 3</span><span class="bar"><i style="width: 33.3%"></i></span></span>
     </header>
     <div class="screen-body">
@@ -974,7 +969,7 @@ body::before {
   <section class="screen" id="s-lifts" aria-labelledby="sport-name" hidden>
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
-      <span class="mini-logo" aria-hidden="true">Train <b>Real</b></span>
+      <span class="mini-logo" aria-hidden="true"></span>
       <span class="progress"><span>Step 2 of 3</span><span class="bar"><i style="width: 66.6%"></i></span></span>
     </header>
     <div class="screen-body">
@@ -999,7 +994,7 @@ body::before {
   <section class="screen" id="s-send" aria-labelledby="mail-title" hidden>
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
-      <span class="mini-logo" aria-hidden="true">Train <b>Real</b></span>
+      <span class="mini-logo" aria-hidden="true"></span>
       <span class="progress"><span>Step 3 of 3</span><span class="bar"><i style="width: 100%"></i></span></span>
     </header>
     <div class="screen-body">
@@ -1437,6 +1432,14 @@ const liftsEl = document.getElementById("lifts");
 let current = null;     // the sport the user picked
 let rendered = null;    // the sport whose cards are currently built
 let emailedTo = null;   // address used on Step 3, or null if skipped
+
+/* Every screen after the welcome shows the same logo as the welcome screen, cloned from it */
+(function fillMiniLogos() {
+  const logo = document.querySelector("#s-welcome .logo");
+  document.querySelectorAll(".mini-logo").forEach(m => {
+    m.append(logo.querySelector(".logo-word").cloneNode(true), logo.querySelector(".logo-icon").cloneNode(true));
+  });
+})();
 
 function el(tag, cls, text) {
   const n = document.createElement(tag);
