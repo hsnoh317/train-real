@@ -16,9 +16,9 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Football", "url": "./#football" },
-    { "name": "Boxing", "url": "./#boxing" },
-    { "name": "Baseball", "url": "./#baseball" },
-    { "name": "Wrestling", "url": "./#wrestling" }
+    { "name": "Football", "url": "./#lifts-football" },
+    { "name": "Boxing", "url": "./#lifts-boxing" },
+    { "name": "Baseball", "url": "./#lifts-baseball" },
+    { "name": "Wrestling", "url": "./#lifts-wrestling" }
   ]
 }

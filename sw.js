@@ -1,6 +1,6 @@
 /* TRAIN REAL service worker: makes the app open offline.
    Bump CACHE whenever index.html or the icons change, so phones pick up the new version. */
-const CACHE = "train-real-v1";
+const CACHE = "train-real-v2";
 const ASSETS = [
   "./",
   "./index.html",
