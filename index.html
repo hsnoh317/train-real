@@ -763,9 +763,10 @@ body::before {
 .intro-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.3rem, 10vw, 3.6rem);
+  font-size: clamp(3rem, 14vw, 4.6rem);
   line-height: .95;
   text-transform: uppercase;
+  text-align: center;
   margin: 0;
   color: var(--ink);
   text-wrap: balance;
@@ -1850,7 +1851,7 @@ window.addEventListener("popstate", () => show(parse(location.hash), "back"));
 document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", goBack));
 
-/* Welcome: tap anywhere to continue; on a fresh open it moves on by itself. */
+/* Welcome: stays until the user taps; a tap anywhere is the only way to continue. */
 document.getElementById("s-welcome").addEventListener("click", () => { if (currentScreen === "welcome") go("intro"); });
 
 /* ---------- Workout text, copy and email ---------- */
@@ -1988,9 +1989,6 @@ if ("serviceWorker" in navigator) {
   const addr = addressFor(first.name, first.sport);
   if ((location.hash || "") !== (first.name === "welcome" ? "" : addr)) history.replaceState(null, "", addr);
   show(first, null);
-  if (first.name === "welcome") {
-    welcomeTimer = setTimeout(() => { if (currentScreen === "welcome") go("intro"); }, 2800);
-  }
 })();
 </script>
 
