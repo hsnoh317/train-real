@@ -1,6 +1,6 @@
 /* TRAIN REAL service worker: makes the app open offline.
    Bump CACHE whenever index.html or the icons change, so phones pick up the new version. */
-const CACHE = "train-real-v15";
+const CACHE = "train-real-v16";
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,7 +13,7 @@ const ASSETS = [
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(a => new Request(a, { cache: "reload" })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", event => {
@@ -29,10 +29,11 @@ self.addEventListener("fetch", event => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  // The page itself: try the network for the newest version, fall back to the cached copy offline.
+  // The page itself: always ask the server for the newest version (skipping the browser's
+  // 10-minute cache), and fall back to the cached copy offline.
   if (req.mode === "navigate") {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: "no-cache" })
         .then(res => {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put("./index.html", copy));

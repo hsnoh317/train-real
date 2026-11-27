@@ -1978,7 +1978,22 @@ window.addEventListener("appinstalled", () => { installBox.hidden = true; });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+      .then(reg => reg.update()).catch(() => {});
+  });
+  // When an updated version takes over, reload once so the newest text shows right away.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController || reloaded) return;
+    reloaded = true;
+    location.reload();
+  });
+  // Coming back to the app from the background: check for an update.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      navigator.serviceWorker.getRegistration().then(r => r && r.update()).catch(() => {});
+    }
   });
 }
 
