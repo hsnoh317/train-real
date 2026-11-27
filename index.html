@@ -846,6 +846,92 @@ body::before {
 #s-lifts .lifts { grid-template-columns: 1fr; }
 #s-lifts .notes { grid-template-columns: 1fr; padding-top: 1.25rem; }
 
+/* Step 2: information form */
+.info-form { display: grid; gap: 1.5rem; }
+.field { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: .55rem; }
+.field-label {
+  padding: 0;
+  font-family: var(--font-data);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field-label span { text-transform: none; letter-spacing: 0; }
+#info-name {
+  width: 100%;
+  box-sizing: border-box;
+  font: 1.05rem var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .9rem 1rem;
+}
+#info-name:focus-visible { outline: 2px solid var(--sport); outline-offset: 1px; border-color: transparent; }
+.options { display: grid; gap: .5rem; }
+.options.days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.opt { position: relative; display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.opt > span {
+  display: grid;
+  gap: .15rem;
+  padding: .8rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  transition: border-color .15s ease, background .15s ease;
+}
+.opt b {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.opt small { font-size: .85rem; line-height: 1.3; color: var(--muted); }
+.options.days .opt > span { justify-items: center; text-align: center; padding: .75rem .5rem; }
+.options.days .opt b { font-size: 1.7rem; }
+.opt input:checked + span {
+  border-color: var(--sport);
+  background: color-mix(in srgb, var(--sport-plate) 12%, var(--surface));
+  box-shadow: inset 0 0 0 1px var(--sport);
+}
+.opt input:checked + span b { color: var(--sport); }
+.opt input:focus-visible + span { outline: 3px solid var(--sport); outline-offset: 2px; }
+
+/* Step 3: what the plan was built for */
+.profile-box {
+  display: grid;
+  gap: .7rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+}
+.profile-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+.profile-tags span {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--sport-plate) 14%, var(--surface));
+  border-radius: 999px;
+  padding: .25rem .7rem;
+}
+.profile-tip { margin: 0; font-size: .93rem; line-height: 1.45; }
+.profile-tip b {
+  display: block;
+  font-family: var(--font-data);
+  font-weight: 500;
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sport);
+  margin-bottom: .15rem;
+}
+.profile-box .link-btn { justify-self: start; padding: .2rem 0; }
+
 /* 5. Send */
 .mail-form { gap: .5rem; }
 #mail-to { width: 100%; box-sizing: border-box; font-size: 1.05rem; padding: .9rem 1rem; background: var(--surface); }
@@ -964,7 +1050,7 @@ body::before {
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 1 of 3</span><span class="bar"><i style="width: 33.3%"></i></span></span>
+      <span class="progress"><span>Step 1 of 4</span><span class="bar"><i style="width: 25%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
@@ -975,28 +1061,79 @@ body::before {
     </div>
   </section>
 
-  <!-- 4. Step 2: three main lifts -->
+  <!-- Step 2: put in your information -->
+  <section class="screen" id="s-info" aria-labelledby="info-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 50%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2</div>
+        <h2 class="screen-title" id="info-title">Put in your information</h2>
+        <p class="screen-sub">Put in your information to generate a personalized workout plan!</p>
+      </div>
+      <form class="info-form" id="info-form" novalidate>
+        <div class="field">
+          <label class="field-label" for="info-name">Your name <span>(optional)</span></label>
+          <input id="info-name" name="who" type="text" autocomplete="given-name" maxlength="30" placeholder="First name">
+        </div>
+        <fieldset class="field">
+          <legend class="field-label">Experience in the gym</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="level" value="beginner"><span><b>Beginner</b><small>Less than 6 months of lifting</small></span></label>
+            <label class="opt"><input type="radio" name="level" value="intermediate"><span><b>Intermediate</b><small>6 months to 2 years</small></span></label>
+            <label class="opt"><input type="radio" name="level" value="advanced"><span><b>Advanced</b><small>More than 2 years</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend class="field-label">Main goal</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="goal" value="power"><span><b>Power</b><small>Faster and more explosive</small></span></label>
+            <label class="opt"><input type="radio" name="goal" value="strength"><span><b>Strength</b><small>Stronger in contact, holds and lifts</small></span></label>
+            <label class="opt"><input type="radio" name="goal" value="durable"><span><b>Stay injury-free</b><small>Tougher joints and fewer injuries</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend class="field-label">Training days per week</legend>
+          <div class="options days">
+            <label class="opt"><input type="radio" name="days" value="1"><span><b>1</b><small>day</small></span></label>
+            <label class="opt"><input type="radio" name="days" value="2"><span><b>2</b><small>days</small></span></label>
+            <label class="opt"><input type="radio" name="days" value="3"><span><b>3</b><small>days</small></span></label>
+          </div>
+        </fieldset>
+        <p class="mail-error" id="info-error" hidden>Pick your experience, goal and training days to build your plan.</p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="info-form">Build my plan</button>
+    </div>
+  </section>
+
+  <!-- Step 3: personalized plan -->
   <section class="screen" id="s-lifts" aria-labelledby="sport-name" hidden>
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 2 of 3</span><span class="bar"><i style="width: 66.6%"></i></span></span>
+      <span class="progress"><span>Step 3 of 4</span><span class="bar"><i style="width: 75%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2: Three main lifts</div>
+        <div class="eyebrow">Step 3: Your personalized plan</div>
         <h2 class="screen-title sport-title" id="sport-name"></h2>
         <p class="focus" id="sport-focus"></p>
       </div>
+      <div class="profile-box" id="profile-box"></div>
       <ol class="lifts" id="lifts"></ol>
       <footer class="notes">
         <div><b>Order matters</b>Do the lifts in the order shown. Explosive work goes first while you are fresh.</div>
-        <div><b>How often</b>Twice a week alongside practice is plenty. Skip the session the day before a game.</div>
+        <div id="note-often"><b>How often</b>Twice a week alongside practice is plenty. Skip the session the day before a game.</div>
         <div><b>Stay safe</b>Warm up for about 10 minutes first. Stop any movement that hurts and check with a coach or physio.</div>
       </footer>
     </div>
     <div class="screen-foot">
-      <button class="cta" type="button" data-go="send">Next: Step 3</button>
+      <button class="cta" type="button" data-go="send">Next: Step 4</button>
     </div>
   </section>
 
@@ -1005,11 +1142,11 @@ body::before {
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 3 of 3</span><span class="bar"><i style="width: 100%"></i></span></span>
+      <span class="progress"><span>Step 4 of 4</span><span class="bar"><i style="width: 100%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 3</div>
+        <div class="eyebrow">Step 4</div>
         <h2 class="screen-title" id="mail-title">Send this workout to yourself</h2>
         <p class="screen-sub">Put your email address. We will send the workout plan to your email!</p>
       </div>
@@ -1458,6 +1595,106 @@ function el(tag, cls, text) {
   return n;
 }
 
+/* ---------- Personalization (Step 2 answers) ----------
+   Experience changes the number of sets and the load guidance; the goal adds a focus tip
+   (strength also adds 30 s of rest); training days set the weekly schedule. */
+const LEVELS = {
+  beginner:     { label: "Beginner",     sets: -1, load: " Start easier than this while you learn the movement." },
+  intermediate: { label: "Intermediate", sets: 0,  load: "" },
+  advanced:     { label: "Advanced",     sets: 1,  load: " Make it a little harder each week." }
+};
+const GOALS = {
+  power:    { label: "Power",            rest: 0,  tip: "Move every rep as fast as you can, and end the set when the speed drops." },
+  strength: { label: "Strength",         rest: 30, tip: "Rest the full time between sets so every rep is heavy and clean." },
+  durable:  { label: "Stay injury-free", rest: 0,  tip: "Warm up well, finish with 5 minutes of stretching, and never train through joint pain." }
+};
+const DAYS = {
+  "1": { label: "1 day a week",  plan: "Once a week. Do all three lifts in one session." },
+  "2": { label: "2 days a week", plan: "Twice a week, with at least two days between sessions. Skip the session the day before a game." },
+  "3": { label: "3 days a week", plan: "Three times a week on days that aren't back to back, like Mon, Wed and Fri. Skip the session the day before a game." }
+};
+const DEFAULT_PROFILE = { name: "", level: "intermediate", goal: "power", days: "2" };
+const PROFILE_KEY = "trainreal-profile";
+const validProfile = p => p && LEVELS[p.level] && GOALS[p.goal] && DAYS[p.days];
+let profile = null;
+try { const saved = JSON.parse(localStorage.getItem(PROFILE_KEY)); if (validProfile(saved)) profile = { name: String(saved.name || "").slice(0, 30), level: saved.level, goal: saved.goal, days: saved.days }; } catch (e) {}
+const prof = () => profile || DEFAULT_PROFILE;
+const profileSig = p => [p.name, p.level, p.goal, p.days].join("|");
+
+function adjustSets(str, delta) {
+  if (!delta) return str;
+  const m = str.match(/^(\d+)(\s*×[\s\S]*)$/);
+  return m ? Math.max(2, Number(m[1]) + delta) + m[2] : str;
+}
+function addRest(rest, extra) {
+  if (!extra) return rest;
+  let sec = null, m;
+  if ((m = rest.match(/^(\d+)\s*s$/))) sec = Number(m[1]);
+  else if ((m = rest.match(/^(\d+)\s*min$/))) sec = Number(m[1]) * 60;
+  if (sec === null) return rest;
+  const t = sec + extra;
+  if (t < 120) return t + " s";
+  return t % 60 === 0 ? (t / 60) + " min" : Math.floor(t / 60) + " min " + (t % 60) + " s";
+}
+function personalize(l, p) {
+  const L = LEVELS[p.level], G = GOALS[p.goal];
+  const load = L.load ? l.load.replace(/\.?$/, ".") + L.load : l.load;
+  return Object.assign({}, l, { sets: adjustSets(l.sets, L.sets), rest: addRest(l.rest, G.rest), load });
+}
+function planTitle(key) {
+  const p = prof();
+  return (p.name ? p.name + "'s " : "") + SPORTS[key].name + " workout";
+}
+
+/* Step 2 form */
+const infoForm = document.getElementById("info-form");
+const infoErr = document.getElementById("info-error");
+function fillInfo() {
+  const p = profile;
+  document.getElementById("info-name").value = p ? p.name : "";
+  ["level", "goal", "days"].forEach(k => {
+    infoForm.querySelectorAll('input[name="' + k + '"]').forEach(r => { r.checked = !!p && r.value === p[k]; });
+  });
+  infoErr.hidden = true;
+}
+infoForm.addEventListener("change", () => {
+  const fd = new FormData(infoForm);
+  if (fd.get("level") && fd.get("goal") && fd.get("days")) infoErr.hidden = true;
+});
+infoForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const fd = new FormData(infoForm);
+  const p = { name: String(fd.get("who") || "").trim().slice(0, 30), level: fd.get("level"), goal: fd.get("goal"), days: fd.get("days") };
+  if (!validProfile(p)) {
+    infoErr.hidden = false;
+    const missing = ["level", "goal", "days"].find(k => !fd.get(k));
+    const target = missing ? infoForm.querySelector('input[name="' + missing + '"]').closest("fieldset") : infoErr;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  profile = p;
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (err) {}
+  go("lifts");
+});
+
+/* Step 3: what the plan was built for */
+function renderProfile(key, p) {
+  const box = document.getElementById("profile-box");
+  box.replaceChildren();
+  const tags = el("div", "profile-tags");
+  if (p.name) tags.append(el("span", null, "For " + p.name));
+  tags.append(el("span", null, LEVELS[p.level].label), el("span", null, GOALS[p.goal].label), el("span", null, DAYS[p.days].label));
+  const tip = el("p", "profile-tip");
+  tip.append(el("b", null, "Your focus"), document.createTextNode(GOALS[p.goal].tip));
+  const sched = el("p", "profile-tip");
+  sched.append(el("b", null, "Your week"), document.createTextNode(DAYS[p.days].plan));
+  const edit = el("button", "link-btn", "Edit my information");
+  edit.type = "button";
+  edit.addEventListener("click", () => go("info"));
+  box.append(tags, tip, sched, edit);
+  document.getElementById("note-often").replaceChildren(el("b", null, "How often"), document.createTextNode(DAYS[p.days].plan));
+}
+
 /* Step 1: one row per sport. Tapping a row goes straight to Step 2. */
 const sportList = document.getElementById("sport-list");
 ORDER.forEach(key => {
@@ -1471,7 +1708,7 @@ ORDER.forEach(key => {
   const txt = el("span", "sport-text");
   txt.append(el("span", "sport-name", s.name), el("span", "sport-blurb", s.focus));
   b.append(pict, txt, el("span", "chev", "›"));
-  b.addEventListener("click", () => go("lifts", key));
+  b.addEventListener("click", () => go("info", key));
   li.append(b);
   sportList.append(li);
 });
@@ -1479,10 +1716,13 @@ ORDER.forEach(key => {
 /* Step 2: the three lift cards for a sport */
 function render(key) {
   const s = SPORTS[key];
+  const p = prof();
+  const plan = s.lifts.map(l => personalize(l, p));
   document.getElementById("sport-name").textContent = s.name;
   document.getElementById("sport-focus").textContent = s.focus;
   liftsEl.replaceChildren();
-  s.lifts.forEach((l, i) => {
+  renderProfile(key, p);
+  plan.forEach((l, i) => {
     const li = el("li", "lift");
 
     const top = el("div", "lift-top");
@@ -1528,23 +1768,24 @@ function render(key) {
   const sum = document.getElementById("send-summary");
   sum.replaceChildren();
   const ol = el("ol");
-  s.lifts.forEach(l => ol.append(el("li", null, l.name)));
-  sum.append(el("div", "eyebrow", s.name + " workout"), ol);
+  plan.forEach(l => ol.append(el("li", null, l.name + "  ·  " + l.sets)));
+  sum.append(el("div", "eyebrow", planTitle(key)), ol);
 }
 
 function setSport(key) {
   current = key;
   app.dataset.sport = key;
-  if (rendered !== key) { render(key); rendered = key; }
+  const sig = key + "|" + profileSig(prof());
+  if (rendered !== sig) { render(key); rendered = sig; }
 }
 
 /* ---------- Screens and navigation ----------
    Each screen has its own address (#intro, #pick, #lifts-boxing, #send-boxing, #thanks-boxing).
    Screens REPLACE the current history entry instead of adding one, so the phone's swipe-back
    gesture has nowhere to go: the on-screen Back button is the only way back (PARENT order). */
-const SCREENS = ["welcome", "intro", "pick", "lifts", "send", "thanks"];
-const NEEDS_SPORT = ["lifts", "send", "thanks"];
-const PARENT = { intro: "welcome", pick: "intro", lifts: "pick", send: "lifts", thanks: "send" };
+const SCREENS = ["welcome", "intro", "pick", "info", "lifts", "send", "thanks"];
+const NEEDS_SPORT = ["info", "lifts", "send", "thanks"];
+const PARENT = { intro: "welcome", pick: "intro", info: "pick", lifts: "info", send: "lifts", thanks: "send" };
 let currentScreen = null;
 let navigatedInApp = false;
 let welcomeTimer = null;
@@ -1580,6 +1821,7 @@ function show(state, dir) {
   currentScreen = state.name;
   window.scrollTo(0, 0);
 
+  if (state.name === "info") fillInfo();
   if (state.name === "send") updateMail();
   if (state.name === "thanks") renderThanks();
 
@@ -1614,16 +1856,23 @@ document.getElementById("s-welcome").addEventListener("click", () => { if (curre
 /* ---------- Workout text, copy and email ---------- */
 function sessionText(key) {
   const s = SPORTS[key];
-  const lines = ["TRAIN REAL: " + s.name + " gym workout", s.focus, ""];
-  s.lifts.forEach((l, i) => {
+  const p = prof();
+  const lines = [
+    "TRAIN REAL: " + planTitle(key),
+    "Plan for: " + LEVELS[p.level].label + " · " + GOALS[p.goal].label + " · " + DAYS[p.days].label,
+    s.focus,
+    ""
+  ];
+  s.lifts.map(l => personalize(l, p)).forEach((l, i) => {
     lines.push((i + 1) + ". " + l.name + "  |  " + l.sets + "  |  rest " + l.rest);
     lines.push("   Load: " + l.load);
     l.cues.forEach(c => lines.push("   - " + c));
     lines.push("   Why: " + l.transfer, "");
   });
   lines.push(
+    "Your focus: " + GOALS[p.goal].tip,
+    "Your week: " + DAYS[p.days].plan,
     "Order: do the lifts in the order shown. Explosive work goes first while you are fresh.",
-    "How often: twice a week alongside practice. Skip the session the day before a game.",
     "Stay safe: warm up for about 10 minutes first. Stop any movement that hurts and check with a coach or physio."
   );
   return lines.join("\n").trim();
@@ -1659,7 +1908,7 @@ function mailHref() {
   if (!EMAIL_RE.test(to) || !current) return null;
   const s = SPORTS[current];
   return "mailto:" + encodeURIComponent(to).replace(/%40/g, "@") +
-    "?subject=" + encodeURIComponent("TRAIN REAL: " + s.name + " gym workout") +
+    "?subject=" + encodeURIComponent("TRAIN REAL: " + planTitle(current)) +
     "&body=" + encodeURIComponent(sessionText(current));
 }
 function updateMail() {
@@ -1692,12 +1941,12 @@ function renderThanks() {
   mailCopy.textContent = "Copy the workout";
   msg.replaceChildren();
   if (emailedTo) {
-    msg.append("Your email app should now show your " + s.name + " workout, addressed to ");
+    msg.append((prof().name ? prof().name + ", your" : "Your") + " email app should now show your " + s.name + " workout, addressed to ");
     msg.append(el("b", null, emailedTo));
     msg.append(". Press send there to keep it.");
     note.hidden = false;
   } else {
-    msg.textContent = "Your " + s.name + " workout is ready. See you at the gym.";
+    msg.textContent = (prof().name ? prof().name + ", your " : "Your ") + s.name + " workout is ready. See you at the gym.";
     note.hidden = true;
   }
 }
