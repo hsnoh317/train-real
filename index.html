@@ -573,6 +573,10 @@ h3 {
 }
 
 /* ---------- App flow: one full-height screen at a time ---------- */
+/* Headings get focus on each screen change so screen readers announce the new page.
+   iPhone Safari draws a blue ring around them; that focus is not from the keyboard, so hide the ring. */
+[tabindex="-1"]:focus { outline: none; }
+#s-welcome { -webkit-tap-highlight-color: transparent; }
 :root { --sport: var(--ink-red); --sport-plate: var(--plate-red); }  /* brand color before a sport is picked */
 body::before {
   content: "";
