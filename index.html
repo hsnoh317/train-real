@@ -1535,8 +1535,9 @@ function setSport(key) {
 }
 
 /* ---------- Screens and navigation ----------
-   Each screen has its own address (#intro, #pick, #lifts-boxing, #send-boxing, #thanks-boxing),
-   so the phone's back gesture and the Back buttons both step through the flow. */
+   Each screen has its own address (#intro, #pick, #lifts-boxing, #send-boxing, #thanks-boxing).
+   Screens REPLACE the current history entry instead of adding one, so the phone's swipe-back
+   gesture has nowhere to go: the on-screen Back button is the only way back (PARENT order). */
 const SCREENS = ["welcome", "intro", "pick", "lifts", "send", "thanks"];
 const NEEDS_SPORT = ["lifts", "send", "thanks"];
 const PARENT = { intro: "welcome", pick: "intro", lifts: "pick", send: "lifts", thanks: "send" };
@@ -1588,12 +1589,12 @@ function go(name, sport) {
   const s = NEEDS_SPORT.includes(name) ? (sport || current) : null;
   if (NEEDS_SPORT.includes(name) && !s) name = "pick";
   navigatedInApp = true;
-  history.pushState(null, "", addressFor(name, s));
+  history.replaceState(null, "", addressFor(name, s));
   show({ name, sport: s }, "fwd");
 }
 
 function goBack() {
-  if (navigatedInApp && history.length > 1) { history.back(); return; }
+  navigatedInApp = true;
   const p = PARENT[currentScreen] || "welcome";
   history.replaceState(null, "", addressFor(p, current));
   show(parse(location.hash), "back");
