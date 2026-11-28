@@ -859,7 +859,7 @@ body::before {
   color: var(--muted);
 }
 .field-label span { text-transform: none; letter-spacing: 0; }
-#info-name {
+#info-name, .text-in {
   width: 100%;
   box-sizing: border-box;
   font: 1.05rem var(--font-body);
@@ -869,7 +869,40 @@ body::before {
   border-radius: 8px;
   padding: .9rem 1rem;
 }
-#info-name:focus-visible { outline: 2px solid var(--sport); outline-offset: 1px; border-color: transparent; }
+#info-name:focus-visible, .text-in:focus-visible { outline: 2px solid var(--sport); outline-offset: 1px; border-color: transparent; }
+/* Step 2: number answers (age, height, weight) with a unit switch */
+.field.num-field { gap: 1rem; }
+.num-row { display: flex; align-items: center; gap: .6rem; }
+.num-row[hidden] { display: none; }
+.text-in.num {
+  width: 7.5rem;
+  font: 800 2rem/1 var(--font-display);
+  text-align: center;
+  padding: .75rem .6rem;
+}
+.num-row .text-in.num + .unit + .text-in.num { margin-left: .4rem; }
+#in-hft, #in-hin { width: 5rem; }
+.unit {
+  font-family: var(--font-data);
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.unit-toggle {
+  display: inline-flex;
+  justify-self: start;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+}
+.unit-toggle label { position: relative; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.unit-toggle input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.unit-toggle span { display: block; padding: .45rem 1.1rem; border-radius: 999px; font-weight: 600; font-size: .92rem; color: var(--muted); }
+.unit-toggle input:checked + span { background: var(--sport-plate); color: #fff; }
+.unit-toggle input:focus-visible + span { outline: 2px solid var(--sport); outline-offset: 2px; }
 .options { display: grid; gap: .5rem; }
 .options.days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .opt { position: relative; display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -1067,18 +1100,18 @@ body::before {
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 31%"></i></span></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 28%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2 · 1 of 4</div>
+        <div class="eyebrow">Step 2 · 1 of 8</div>
         <h2 class="screen-title" id="info-title">Put in your information</h2>
         <p class="screen-sub">Put in your information to generate a personalized workout plan!</p>
       </div>
       <form class="info-form" id="f-info" data-field="info" novalidate>
         <div class="field">
           <label class="field-label" for="info-name">Your name <span>(optional)</span></label>
-          <input id="info-name" name="who" type="text" autocomplete="given-name" maxlength="30" placeholder="First name" enterkeyhint="next">
+          <input id="info-name" class="text-in" name="who" type="text" autocomplete="given-name" maxlength="30" placeholder="First name" enterkeyhint="next">
         </div>
       </form>
     </div>
@@ -1087,7 +1120,57 @@ body::before {
     </div>
   </section>
 
-  <section class="screen" id="s-level" aria-labelledby="level-title" hidden>
+  <section class="screen" id="s-gender" aria-labelledby="gender-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 31%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 2 of 8</div>
+        <h2 class="screen-title" id="gender-title">Gender</h2>
+      </div>
+      <form class="info-form" id="f-gender" data-field="gender" novalidate>
+        <fieldset class="field" aria-labelledby="gender-title">
+          <div class="options">
+            <label class="opt"><input type="radio" name="gender" value="male"><span><b>Male</b></span></label>
+            <label class="opt"><input type="radio" name="gender" value="female"><span><b>Female</b></span></label>
+            <label class="opt"><input type="radio" name="gender" value="na"><span><b>Prefer not to say</b></span></label>
+          </div>
+        </fieldset>
+        <p class="mail-error" id="e-gender" hidden>Pick one to continue.</p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-gender">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-age" aria-labelledby="age-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 34%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 3 of 8</div>
+        <h2 class="screen-title" id="age-title">Age</h2>
+      </div>
+      <form class="info-form" id="f-age" data-field="age" novalidate>
+        <div class="field">
+          <div class="num-row"><input id="in-age" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-labelledby="age-title"><span class="unit">years old</span></div>
+        </div>
+        <p class="mail-error" id="e-age" hidden></p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-age">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-height" aria-labelledby="height-title" hidden>
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
@@ -1095,7 +1178,56 @@ body::before {
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2 · 2 of 4</div>
+        <div class="eyebrow">Step 2 · 4 of 8</div>
+        <h2 class="screen-title" id="height-title">Height</h2>
+      </div>
+      <form class="info-form" id="f-height" data-field="height" novalidate>
+        <div class="field num-field">
+          <div class="unit-toggle" role="radiogroup" aria-label="Height unit"><label><input type="radio" name="hunit" value="cm"><span>cm</span></label><label><input type="radio" name="hunit" value="ft"><span>ft / in</span></label></div>
+          <div class="num-row" data-unit="cm"><input id="in-hcm" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-label="Height in centimetres"><span class="unit">cm</span></div>
+          <div class="num-row" data-unit="ft" hidden><input id="in-hft" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Height, feet"><span class="unit">ft</span><input id="in-hin" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="Height, inches"><span class="unit">in</span></div>
+        </div>
+        <p class="mail-error" id="e-height" hidden></p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-height">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-weight" aria-labelledby="weight-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 41%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 5 of 8</div>
+        <h2 class="screen-title" id="weight-title">Weight</h2>
+      </div>
+      <form class="info-form" id="f-weight" data-field="weight" novalidate>
+        <div class="field num-field">
+          <div class="unit-toggle" role="radiogroup" aria-label="Weight unit"><label><input type="radio" name="wunit" value="kg"><span>kg</span></label><label><input type="radio" name="wunit" value="lb"><span>lb</span></label></div>
+          <div class="num-row"><input id="in-w" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="decimal" maxlength="5" aria-label="Weight"><span class="unit" id="w-unit">kg</span></div>
+        </div>
+        <p class="mail-error" id="e-weight" hidden></p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-weight">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-level" aria-labelledby="level-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 44%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 6 of 8</div>
         <h2 class="screen-title" id="level-title">Experience in the gym</h2>
       </div>
       <form class="info-form" id="f-level" data-field="level" novalidate>
@@ -1118,11 +1250,11 @@ body::before {
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 44%"></i></span></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 47%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2 · 3 of 4</div>
+        <div class="eyebrow">Step 2 · 7 of 8</div>
         <h2 class="screen-title" id="goal-title">Main goal</h2>
       </div>
       <form class="info-form" id="f-goal" data-field="goal" novalidate>
@@ -1149,7 +1281,7 @@ body::before {
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2 · 4 of 4</div>
+        <div class="eyebrow">Step 2 · 8 of 8</div>
         <h2 class="screen-title" id="days-title">Training days per week</h2>
       </div>
       <form class="info-form" id="f-days" data-field="days" novalidate>
@@ -1670,13 +1802,45 @@ const DAYS = {
   "2": { label: "2 days a week", plan: "Twice a week, with at least two days between sessions. Skip the session the day before a game." },
   "3": { label: "3 days a week", plan: "Three times a week on days that aren't back to back, like Mon, Wed and Fri. Skip the session the day before a game." }
 };
-const DEFAULT_PROFILE = { name: "", level: "intermediate", goal: "power", days: "2" };
+const GENDERS = { male: "Male", female: "Female", na: "Prefer not to say" };
+const validAge = a => Number.isInteger(a) && a >= 10 && a <= 100;
+const validHeight = h => !!h && (h.unit === "cm" ? Number.isInteger(h.cm) && h.cm >= 100 && h.cm <= 250
+  : h.unit === "ft" ? Number.isInteger(h.ft) && Number.isInteger(h.in) && h.ft >= 3 && h.ft <= 8 && h.in >= 0 && h.in <= 11 : false);
+const validWeight = w => !!w && typeof w.v === "number" && (w.unit === "kg" ? w.v >= 25 && w.v <= 300 : w.unit === "lb" ? w.v >= 55 && w.v <= 660 : false);
+const heightText = h => h.unit === "cm" ? h.cm + " cm" : h.ft + " ft " + h.in + " in";
+const weightText = w => w.v + " " + w.unit;
+/* Gender, age, height and weight show on the plan and in the email; age also adds a safety tip. */
+function bodyTags(p) {
+  const t = [];
+  if (p.gender && p.gender !== "na" && GENDERS[p.gender]) t.push(GENDERS[p.gender]);
+  if (validAge(p.age)) t.push(p.age + " years old");
+  if (validHeight(p.height)) t.push(heightText(p.height));
+  if (validWeight(p.weight)) t.push(weightText(p.weight));
+  return t;
+}
+function ageTip(p) {
+  if (!validAge(p.age)) return "";
+  if (p.age < 18) return "You're still growing. Learn every lift with light weight and a coach watching, and add weight only when your form is clean.";
+  if (p.age >= 40) return "Warm up for an extra 5 minutes and add weight in small steps from week to week.";
+  return "";
+}
+const DEFAULT_PROFILE = { name: "", gender: null, age: null, height: null, weight: null, level: "intermediate", goal: "power", days: "2" };
 const PROFILE_KEY = "trainreal-profile";
 const validProfile = p => p && LEVELS[p.level] && GOALS[p.goal] && DAYS[p.days];
 let profile = null;
-try { const saved = JSON.parse(localStorage.getItem(PROFILE_KEY)); if (validProfile(saved)) profile = { name: String(saved.name || "").slice(0, 30), level: saved.level, goal: saved.goal, days: saved.days }; } catch (e) {}
+try {
+  const saved = JSON.parse(localStorage.getItem(PROFILE_KEY));
+  if (validProfile(saved)) profile = {
+    name: String(saved.name || "").slice(0, 30),
+    gender: GENDERS[saved.gender] ? saved.gender : null,
+    age: validAge(saved.age) ? saved.age : null,
+    height: validHeight(saved.height) ? saved.height : null,
+    weight: validWeight(saved.weight) ? saved.weight : null,
+    level: saved.level, goal: saved.goal, days: saved.days
+  };
+} catch (e) {}
 const prof = () => profile || DEFAULT_PROFILE;
-const profileSig = p => [p.name, p.level, p.goal, p.days].join("|");
+const profileSig = p => [p.name, p.gender, p.age, JSON.stringify(p.height), JSON.stringify(p.weight), p.level, p.goal, p.days].join("|");
 
 function adjustSets(str, delta) {
   if (!delta) return str;
@@ -1703,46 +1867,150 @@ function planTitle(key) {
   return (p.name ? p.name + "'s " : "") + SPORTS[key].name + " workout";
 }
 
-/* Step 2: four short pages (name, experience, goal, training days).
-   Answers are kept in a draft while moving between them and saved when the plan is built. */
-const INFO_NEXT = { info: "level", level: "goal", goal: "days" };
+/* Step 2: one question per page (name, gender, age, height, weight, experience, goal, days).
+   Answers are kept in a draft while moving between pages and saved when the plan is built. */
+const INFO_ORDER = ["info", "gender", "age", "height", "weight", "level", "goal", "days"];
+const RADIO_PAGES = ["gender", "level", "goal", "days"];
+const byId = id => document.getElementById(id);
 let draft = null;
 function startDraft() {
-  draft = profile ? Object.assign({}, profile) : { name: "", level: null, goal: null, days: null };
+  draft = profile ? Object.assign({}, profile)
+    : { name: "", gender: null, age: null, height: null, weight: null, level: null, goal: null, days: null };
 }
+const num = str => { const t = String(str).trim().replace(",", "."); return /^\d+(\.\d+)?$/.test(t) ? Number(t) : NaN; };
+const checked = (form, name) => { const r = form.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : null; };
+const setChecked = (form, name, v) => form.querySelectorAll('input[name="' + name + '"]').forEach(r => { r.checked = r.value === v; });
+const showUnit = (form, unit) => form.querySelectorAll(".num-row[data-unit]").forEach(r => { r.hidden = r.dataset.unit !== unit; });
+
+/* Reads one page. Returns { ok, value } or { ok: false, msg }. */
+function readPage(name) {
+  const form = byId("f-" + name);
+  if (RADIO_PAGES.includes(name)) {
+    const v = checked(form, name);
+    return v ? { ok: true, value: v } : { ok: false, msg: "Pick one to continue." };
+  }
+  if (name === "age") {
+    const a = num(byId("in-age").value);
+    return validAge(a) ? { ok: true, value: a } : { ok: false, msg: "Enter your age in years (10 to 100)." };
+  }
+  if (name === "height") {
+    if (checked(form, "hunit") === "ft") {
+      const inchRaw = byId("in-hin").value.trim();
+      const h = { unit: "ft", ft: num(byId("in-hft").value), in: inchRaw === "" ? 0 : num(inchRaw) };
+      return validHeight(h) ? { ok: true, value: h } : { ok: false, msg: "Enter feet (3 to 8) and inches (0 to 11)." };
+    }
+    const cm = Math.round(num(byId("in-hcm").value));
+    const h = { unit: "cm", cm };
+    return validHeight(h) ? { ok: true, value: h } : { ok: false, msg: "Enter your height in cm (100 to 250)." };
+  }
+  if (name === "weight") {
+    const unit = checked(form, "wunit") || "kg";
+    const w = { unit, v: Math.round(num(byId("in-w").value) * 10) / 10 };
+    return validWeight(w) ? { ok: true, value: w }
+      : { ok: false, msg: unit === "kg" ? "Enter your weight in kg (25 to 300)." : "Enter your weight in lb (55 to 660)." };
+  }
+  return { ok: true, value: byId("info-name").value.trim().slice(0, 30) };
+}
+
 function fillInfo(name) {
-  const form = document.getElementById("f-" + name);
-  if (name === "info") document.getElementById("info-name").value = draft.name || "";
-  else form.querySelectorAll('input[name="' + name + '"]').forEach(r => { r.checked = r.value === draft[name]; });
-  const err = document.getElementById("e-" + name);
+  const form = byId("f-" + name);
+  const d = draft;
+  if (name === "info") byId("info-name").value = d.name || "";
+  else if (RADIO_PAGES.includes(name)) setChecked(form, name, d[name]);
+  else if (name === "age") byId("in-age").value = d.age != null ? d.age : "";
+  else if (name === "height") {
+    const h = d.height || { unit: "cm" };
+    setChecked(form, "hunit", h.unit);
+    showUnit(form, h.unit);
+    byId("in-hcm").value = h.unit === "cm" && h.cm ? h.cm : "";
+    byId("in-hft").value = h.unit === "ft" && h.ft != null ? h.ft : "";
+    byId("in-hin").value = h.unit === "ft" && h.in != null ? h.in : "";
+    typedHeight = d.height;
+  } else if (name === "weight") {
+    const w = d.weight || { unit: "kg" };
+    setChecked(form, "wunit", w.unit);
+    byId("w-unit").textContent = w.unit;
+    byId("in-w").value = w.v != null ? w.v : "";
+    typedWeight = d.weight;
+  }
+  const err = byId("e-" + name);
   if (err) err.hidden = true;
 }
+
+/* Switching units converts a number that's already typed in. The number as typed is remembered,
+   so switching back restores it exactly instead of a rounded conversion. */
+let typedHeight = null, typedWeight = null;
+function rememberTyped(name) {
+  const r = readPage(name);
+  if (name === "height") typedHeight = r.ok ? r.value : null;
+  if (name === "weight") typedWeight = r.ok ? r.value : null;
+}
+function switchHeight(form, unit) {
+  showUnit(form, unit);
+  const h = typedHeight;
+  if (!h) return;
+  if (h.unit === unit) {
+    if (unit === "cm") byId("in-hcm").value = h.cm;
+    else { byId("in-hft").value = h.ft; byId("in-hin").value = h.in; }
+  } else if (unit === "ft") {
+    const total = h.cm / 2.54;
+    let ft = Math.floor(total / 12), inch = Math.round(total - ft * 12);
+    if (inch === 12) { ft += 1; inch = 0; }
+    byId("in-hft").value = ft; byId("in-hin").value = inch;
+  } else {
+    byId("in-hcm").value = Math.round((h.ft * 12 + h.in) * 2.54);
+  }
+}
+function switchWeight(unit) {
+  byId("w-unit").textContent = unit;
+  const w = typedWeight;
+  if (!w) return;
+  byId("in-w").value = w.unit === unit ? w.v : unit === "lb" ? Math.round(w.v * 2.20462) : Math.round(w.v / 2.20462 * 10) / 10;
+}
+
+function fieldOk(k, v) {
+  return k === "gender" ? !!GENDERS[v] : k === "age" ? validAge(v) : k === "height" ? validHeight(v)
+    : k === "weight" ? validWeight(v) : k === "level" ? !!LEVELS[v] : k === "goal" ? !!GOALS[v] : k === "days" ? !!DAYS[v] : true;
+}
 function finishInfo() {
-  const p = { name: String(draft.name || "").trim().slice(0, 30), level: draft.level, goal: draft.goal, days: draft.days };
-  if (!validProfile(p)) { go(["level", "goal", "days"].find(k => !draft[k]) || "level"); return; }
+  const p = {
+    name: String(draft.name || "").trim().slice(0, 30),
+    gender: draft.gender, age: draft.age, height: draft.height, weight: draft.weight,
+    level: draft.level, goal: draft.goal, days: draft.days
+  };
+  const missing = INFO_ORDER.slice(1).find(k => !fieldOk(k, p[k]));
+  if (missing) { go(missing); return; }
   profile = p;
   try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (err) {}
   go("lifts");
 }
-document.getElementById("info-name").addEventListener("input", e => { if (draft) draft.name = e.target.value; });
+
+byId("info-name").addEventListener("input", e => { if (draft) draft.name = e.target.value; });
 document.querySelectorAll("form[data-field]").forEach(form => {
   const name = form.dataset.field;
-  const err = document.getElementById("e-" + name);
-  form.addEventListener("change", () => {
-    const v = new FormData(form).get(name);
-    if (v && name !== "info") { draft[name] = v; if (err) err.hidden = true; }
+  const err = byId("e-" + name);
+  form.addEventListener("change", e => {
+    if (!draft) return;
+    if (e.target.name === "hunit") switchHeight(form, e.target.value);
+    if (e.target.name === "wunit") switchWeight(e.target.value);
+    if (name === "info") return;
+    const r = readPage(name);
+    if (r.ok) { draft[name] = r.value; if (err) err.hidden = true; }
+  });
+  form.addEventListener("input", e => {
+    if (!draft || name === "info" || RADIO_PAGES.includes(name)) return;
+    if (e.target.type === "text") rememberTyped(name);
+    const r = readPage(name);
+    if (r.ok) { draft[name] = r.value; if (err) err.hidden = true; }
   });
   form.addEventListener("submit", e => {
     e.preventDefault();
-    if (name === "info") {
-      draft.name = document.getElementById("info-name").value.trim().slice(0, 30);
-      document.getElementById("info-name").blur();
-    } else {
-      const v = new FormData(form).get(name);
-      if (!v) { err.hidden = false; return; }
-      draft[name] = v;
-    }
-    if (INFO_NEXT[name]) go(INFO_NEXT[name]); else finishInfo();
+    const r = readPage(name);
+    if (!r.ok) { err.textContent = r.msg; err.hidden = false; return; }
+    draft[name] = r.value;
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    const next = INFO_ORDER[INFO_ORDER.indexOf(name) + 1];
+    if (next) go(next); else finishInfo();
   });
 });
 
@@ -1752,15 +2020,22 @@ function renderProfile(key, p) {
   box.replaceChildren();
   const tags = el("div", "profile-tags");
   if (p.name) tags.append(el("span", null, "For " + p.name));
+  bodyTags(p).forEach(t => tags.append(el("span", null, t)));
   tags.append(el("span", null, LEVELS[p.level].label), el("span", null, GOALS[p.goal].label), el("span", null, DAYS[p.days].label));
   const tip = el("p", "profile-tip");
   tip.append(el("b", null, "Your focus"), document.createTextNode(GOALS[p.goal].tip));
+  const extra = [];
+  if (ageTip(p)) {
+    const age = el("p", "profile-tip");
+    age.append(el("b", null, "For your age"), document.createTextNode(ageTip(p)));
+    extra.push(age);
+  }
   const sched = el("p", "profile-tip");
   sched.append(el("b", null, "Your week"), document.createTextNode(DAYS[p.days].plan));
   const edit = el("button", "link-btn", "Edit my information");
   edit.type = "button";
   edit.addEventListener("click", () => go("info"));
-  box.append(tags, tip, sched, edit);
+  box.append(tags, tip, ...extra, sched, edit);
   document.getElementById("note-often").replaceChildren(el("b", null, "How often"), document.createTextNode(DAYS[p.days].plan));
 }
 
@@ -1849,14 +2124,15 @@ function setSport(key) {
 }
 
 /* ---------- Screens and navigation ----------
-   Each screen has its own address (#intro, #pick, #info-boxing, #level-boxing, #goal-boxing,
-   #days-boxing, #lifts-boxing, #send-boxing, #thanks-boxing).
+   Each screen has its own address (#intro, #pick, #info-boxing, #gender-boxing ... #days-boxing,
+   #lifts-boxing, #send-boxing, #thanks-boxing).
    Screens REPLACE the current history entry instead of adding one, so the phone's swipe-back
    gesture has nowhere to go: the on-screen Back button is the only way back (PARENT order). */
-const SCREENS = ["welcome", "intro", "pick", "info", "level", "goal", "days", "lifts", "send", "thanks"];
-const NEEDS_SPORT = ["info", "level", "goal", "days", "lifts", "send", "thanks"];
-const INFO_PAGES = ["info", "level", "goal", "days"];
-const PARENT = { intro: "welcome", pick: "intro", info: "pick", level: "info", goal: "level", days: "goal", lifts: "days", send: "lifts", thanks: "send" };
+const SCREENS = ["welcome", "intro", "pick", "info", "gender", "age", "height", "weight", "level", "goal", "days", "lifts", "send", "thanks"];
+const NEEDS_SPORT = ["info", "gender", "age", "height", "weight", "level", "goal", "days", "lifts", "send", "thanks"];
+const INFO_PAGES = INFO_ORDER;
+const PARENT = { intro: "welcome", pick: "intro", info: "pick", gender: "info", age: "gender", height: "age", weight: "height",
+  level: "weight", goal: "level", days: "goal", lifts: "days", send: "lifts", thanks: "send" };
 let currentScreen = null;
 let navigatedInApp = false;
 let welcomeTimer = null;
@@ -1934,6 +2210,7 @@ function sessionText(key) {
   const lines = [
     "TRAIN REAL: " + planTitle(key),
     "Plan for: " + LEVELS[p.level].label + " · " + GOALS[p.goal].label + " · " + DAYS[p.days].label,
+    ...(bodyTags(p).length ? ["About you: " + bodyTags(p).join(" · ")] : []),
     s.focus,
     ""
   ];
@@ -1945,6 +2222,7 @@ function sessionText(key) {
   });
   lines.push(
     "Your focus: " + GOALS[p.goal].tip,
+    ...(ageTip(p) ? ["For your age: " + ageTip(p)] : []),
     "Your week: " + DAYS[p.days].plan,
     "Order: do the lifts in the order shown. Explosive work goes first while you are fresh.",
     "Stay safe: warm up for about 10 minutes first. Stop any movement that hurts and check with a coach or physio."
