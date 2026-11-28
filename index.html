@@ -1277,7 +1277,8 @@ body::before {
       <form class="info-form" id="f-level" data-field="level" novalidate>
         <fieldset class="field" aria-labelledby="level-title">
           <div class="options">
-            <label class="opt"><input type="radio" name="level" value="beginner"><span><b>Beginner</b><small>Less than 6 months of lifting</small></span></label>
+            <label class="opt"><input type="radio" name="level" value="novice"><span><b>Novice</b><small>Less than 1 month of training</small></span></label>
+            <label class="opt"><input type="radio" name="level" value="beginner"><span><b>Beginner</b><small>Less than 6 months of training</small></span></label>
             <label class="opt"><input type="radio" name="level" value="intermediate"><span><b>Intermediate</b><small>6 months to 2 years</small></span></label>
             <label class="opt"><input type="radio" name="level" value="advanced"><span><b>Advanced</b><small>More than 2 years</small></span></label>
           </div>
@@ -1832,6 +1833,7 @@ function el(tag, cls, text) {
    Experience changes the number of sets and the load guidance; the goal adds a focus tip
    (strength also adds 30 s of rest); training days set the weekly schedule. */
 const LEVELS = {
+  novice:       { label: "Novice",       sets: -1, load: " Use a very light weight, or just the bar, until the movement feels natural." },
   beginner:     { label: "Beginner",     sets: -1, load: " Start easier than this while you learn the movement." },
   intermediate: { label: "Intermediate", sets: 0,  load: "" },
   advanced:     { label: "Advanced",     sets: 1,  load: " Make it a little harder each week." }
