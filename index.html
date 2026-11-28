@@ -1067,48 +1067,104 @@ body::before {
     <header class="topbar">
       <button class="back" type="button" data-back>Back</button>
       <span class="mini-logo" aria-hidden="true"></span>
-      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 50%"></i></span></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 31%"></i></span></span>
     </header>
     <div class="screen-body">
       <div>
-        <div class="eyebrow">Step 2</div>
+        <div class="eyebrow">Step 2 · 1 of 4</div>
         <h2 class="screen-title" id="info-title">Put in your information</h2>
         <p class="screen-sub">Put in your information to generate a personalized workout plan!</p>
       </div>
-      <form class="info-form" id="info-form" novalidate>
+      <form class="info-form" id="f-info" data-field="info" novalidate>
         <div class="field">
           <label class="field-label" for="info-name">Your name <span>(optional)</span></label>
-          <input id="info-name" name="who" type="text" autocomplete="given-name" maxlength="30" placeholder="First name">
+          <input id="info-name" name="who" type="text" autocomplete="given-name" maxlength="30" placeholder="First name" enterkeyhint="next">
         </div>
-        <fieldset class="field">
-          <legend class="field-label">Experience in the gym</legend>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-info">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-level" aria-labelledby="level-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 38%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 2 of 4</div>
+        <h2 class="screen-title" id="level-title">Experience in the gym</h2>
+      </div>
+      <form class="info-form" id="f-level" data-field="level" novalidate>
+        <fieldset class="field" aria-labelledby="level-title">
           <div class="options">
             <label class="opt"><input type="radio" name="level" value="beginner"><span><b>Beginner</b><small>Less than 6 months of lifting</small></span></label>
             <label class="opt"><input type="radio" name="level" value="intermediate"><span><b>Intermediate</b><small>6 months to 2 years</small></span></label>
             <label class="opt"><input type="radio" name="level" value="advanced"><span><b>Advanced</b><small>More than 2 years</small></span></label>
           </div>
         </fieldset>
-        <fieldset class="field">
-          <legend class="field-label">Main goal</legend>
+        <p class="mail-error" id="e-level" hidden>Pick one to continue.</p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-level">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-goal" aria-labelledby="goal-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 44%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 3 of 4</div>
+        <h2 class="screen-title" id="goal-title">Main goal</h2>
+      </div>
+      <form class="info-form" id="f-goal" data-field="goal" novalidate>
+        <fieldset class="field" aria-labelledby="goal-title">
           <div class="options">
             <label class="opt"><input type="radio" name="goal" value="power"><span><b>Power</b><small>Faster and more explosive</small></span></label>
             <label class="opt"><input type="radio" name="goal" value="strength"><span><b>Strength</b><small>Stronger in contact, holds and lifts</small></span></label>
             <label class="opt"><input type="radio" name="goal" value="durable"><span><b>Stay injury-free</b><small>Tougher joints and fewer injuries</small></span></label>
           </div>
         </fieldset>
-        <fieldset class="field">
-          <legend class="field-label">Training days per week</legend>
+        <p class="mail-error" id="e-goal" hidden>Pick one to continue.</p>
+      </form>
+    </div>
+    <div class="screen-foot">
+      <button class="cta" type="submit" form="f-goal">Next</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s-days" aria-labelledby="days-title" hidden>
+    <header class="topbar">
+      <button class="back" type="button" data-back>Back</button>
+      <span class="mini-logo" aria-hidden="true"></span>
+      <span class="progress"><span>Step 2 of 4</span><span class="bar"><i style="width: 50%"></i></span></span>
+    </header>
+    <div class="screen-body">
+      <div>
+        <div class="eyebrow">Step 2 · 4 of 4</div>
+        <h2 class="screen-title" id="days-title">Training days per week</h2>
+      </div>
+      <form class="info-form" id="f-days" data-field="days" novalidate>
+        <fieldset class="field" aria-labelledby="days-title">
           <div class="options days">
             <label class="opt"><input type="radio" name="days" value="1"><span><b>1</b><small>day</small></span></label>
             <label class="opt"><input type="radio" name="days" value="2"><span><b>2</b><small>days</small></span></label>
             <label class="opt"><input type="radio" name="days" value="3"><span><b>3</b><small>days</small></span></label>
           </div>
         </fieldset>
-        <p class="mail-error" id="info-error" hidden>Pick your experience, goal and training days to build your plan.</p>
+        <p class="mail-error" id="e-days" hidden>Pick one to continue.</p>
       </form>
     </div>
     <div class="screen-foot">
-      <button class="cta" type="submit" form="info-form">Build my plan</button>
+      <button class="cta" type="submit" form="f-days">Build my plan</button>
     </div>
   </section>
 
@@ -1647,35 +1703,47 @@ function planTitle(key) {
   return (p.name ? p.name + "'s " : "") + SPORTS[key].name + " workout";
 }
 
-/* Step 2 form */
-const infoForm = document.getElementById("info-form");
-const infoErr = document.getElementById("info-error");
-function fillInfo() {
-  const p = profile;
-  document.getElementById("info-name").value = p ? p.name : "";
-  ["level", "goal", "days"].forEach(k => {
-    infoForm.querySelectorAll('input[name="' + k + '"]').forEach(r => { r.checked = !!p && r.value === p[k]; });
-  });
-  infoErr.hidden = true;
+/* Step 2: four short pages (name, experience, goal, training days).
+   Answers are kept in a draft while moving between them and saved when the plan is built. */
+const INFO_NEXT = { info: "level", level: "goal", goal: "days" };
+let draft = null;
+function startDraft() {
+  draft = profile ? Object.assign({}, profile) : { name: "", level: null, goal: null, days: null };
 }
-infoForm.addEventListener("change", () => {
-  const fd = new FormData(infoForm);
-  if (fd.get("level") && fd.get("goal") && fd.get("days")) infoErr.hidden = true;
-});
-infoForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const fd = new FormData(infoForm);
-  const p = { name: String(fd.get("who") || "").trim().slice(0, 30), level: fd.get("level"), goal: fd.get("goal"), days: fd.get("days") };
-  if (!validProfile(p)) {
-    infoErr.hidden = false;
-    const missing = ["level", "goal", "days"].find(k => !fd.get(k));
-    const target = missing ? infoForm.querySelector('input[name="' + missing + '"]').closest("fieldset") : infoErr;
-    target.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-  }
+function fillInfo(name) {
+  const form = document.getElementById("f-" + name);
+  if (name === "info") document.getElementById("info-name").value = draft.name || "";
+  else form.querySelectorAll('input[name="' + name + '"]').forEach(r => { r.checked = r.value === draft[name]; });
+  const err = document.getElementById("e-" + name);
+  if (err) err.hidden = true;
+}
+function finishInfo() {
+  const p = { name: String(draft.name || "").trim().slice(0, 30), level: draft.level, goal: draft.goal, days: draft.days };
+  if (!validProfile(p)) { go(["level", "goal", "days"].find(k => !draft[k]) || "level"); return; }
   profile = p;
   try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (err) {}
   go("lifts");
+}
+document.getElementById("info-name").addEventListener("input", e => { if (draft) draft.name = e.target.value; });
+document.querySelectorAll("form[data-field]").forEach(form => {
+  const name = form.dataset.field;
+  const err = document.getElementById("e-" + name);
+  form.addEventListener("change", () => {
+    const v = new FormData(form).get(name);
+    if (v && name !== "info") { draft[name] = v; if (err) err.hidden = true; }
+  });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (name === "info") {
+      draft.name = document.getElementById("info-name").value.trim().slice(0, 30);
+      document.getElementById("info-name").blur();
+    } else {
+      const v = new FormData(form).get(name);
+      if (!v) { err.hidden = false; return; }
+      draft[name] = v;
+    }
+    if (INFO_NEXT[name]) go(INFO_NEXT[name]); else finishInfo();
+  });
 });
 
 /* Step 3: what the plan was built for */
@@ -1781,12 +1849,14 @@ function setSport(key) {
 }
 
 /* ---------- Screens and navigation ----------
-   Each screen has its own address (#intro, #pick, #lifts-boxing, #send-boxing, #thanks-boxing).
+   Each screen has its own address (#intro, #pick, #info-boxing, #level-boxing, #goal-boxing,
+   #days-boxing, #lifts-boxing, #send-boxing, #thanks-boxing).
    Screens REPLACE the current history entry instead of adding one, so the phone's swipe-back
    gesture has nowhere to go: the on-screen Back button is the only way back (PARENT order). */
-const SCREENS = ["welcome", "intro", "pick", "info", "lifts", "send", "thanks"];
-const NEEDS_SPORT = ["info", "lifts", "send", "thanks"];
-const PARENT = { intro: "welcome", pick: "intro", info: "pick", lifts: "info", send: "lifts", thanks: "send" };
+const SCREENS = ["welcome", "intro", "pick", "info", "level", "goal", "days", "lifts", "send", "thanks"];
+const NEEDS_SPORT = ["info", "level", "goal", "days", "lifts", "send", "thanks"];
+const INFO_PAGES = ["info", "level", "goal", "days"];
+const PARENT = { intro: "welcome", pick: "intro", info: "pick", level: "info", goal: "level", days: "goal", lifts: "days", send: "lifts", thanks: "send" };
 let currentScreen = null;
 let navigatedInApp = false;
 let welcomeTimer = null;
@@ -1822,7 +1892,10 @@ function show(state, dir) {
   currentScreen = state.name;
   window.scrollTo(0, 0);
 
-  if (state.name === "info") fillInfo();
+  if (INFO_PAGES.includes(state.name)) {
+    if (!draft || (state.name === "info" && dir !== "back")) startDraft();
+    fillInfo(state.name);
+  }
   if (state.name === "send") updateMail();
   if (state.name === "thanks") renderThanks();
 
