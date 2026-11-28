@@ -895,7 +895,24 @@ body::before {
 .info-form.num-page { justify-items: center; }
 .info-form.num-page .field { justify-items: center; }
 .info-form.num-page .unit-toggle { justify-self: center; }
-.info-form.num-page .num-row { justify-content: center; }
+/* The white box sits exactly in the centre; its unit label hangs to the right of it. */
+.info-form.num-page, .info-form.num-page .field { justify-self: stretch; }
+.info-form.num-page .num-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: .6rem;
+  align-items: center;
+  justify-self: stretch;
+}
+.info-form.num-page .num-row[hidden] { display: none; }
+.info-form.num-page .num-row > .text-in { grid-column: 2; }
+.info-form.num-page .num-row > .unit { grid-column: 3; justify-self: start; }
+/* ft / in: the two boxes are centred as a pair, "ft" between them and "in" to the right. */
+.info-form.num-page .num-row[data-unit="ft"] { grid-template-columns: 1fr auto auto auto 1fr; }
+.info-form.num-page .num-row[data-unit="ft"] > #in-hft { grid-column: 2; }
+.info-form.num-page .num-row[data-unit="ft"] > .unit:nth-of-type(1) { grid-column: 3; }
+.info-form.num-page .num-row[data-unit="ft"] > #in-hin { grid-column: 4; margin-left: 0; }
+.info-form.num-page .num-row[data-unit="ft"] > .unit:nth-of-type(2) { grid-column: 5; }
 .info-form.num-page .text-in.num { width: 9rem; font-size: 2.6rem; padding: .85rem .6rem; }
 .info-form.num-page #in-hft, .info-form.num-page #in-hin { width: 6rem; }
 .num-row { display: flex; align-items: center; gap: .6rem; }
