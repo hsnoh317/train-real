@@ -1136,7 +1136,7 @@ body::before {
           <div class="options">
             <label class="opt"><input type="radio" name="gender" value="male"><span><b>Male</b></span></label>
             <label class="opt"><input type="radio" name="gender" value="female"><span><b>Female</b></span></label>
-            <label class="opt"><input type="radio" name="gender" value="na"><span><b>Prefer not to say</b></span></label>
+            <label class="opt"><input type="radio" name="gender" value="other"><span><b>Other</b></span></label>
           </div>
         </fieldset>
         <p class="mail-error" id="e-gender" hidden>Pick one to continue.</p>
@@ -1802,7 +1802,7 @@ const DAYS = {
   "2": { label: "2 days a week", plan: "Twice a week, with at least two days between sessions. Skip the session the day before a game." },
   "3": { label: "3 days a week", plan: "Three times a week on days that aren't back to back, like Mon, Wed and Fri. Skip the session the day before a game." }
 };
-const GENDERS = { male: "Male", female: "Female", na: "Prefer not to say" };
+const GENDERS = { male: "Male", female: "Female", other: "Other" };
 const validAge = a => Number.isInteger(a) && a >= 10 && a <= 100;
 const validHeight = h => !!h && (h.unit === "cm" ? Number.isInteger(h.cm) && h.cm >= 100 && h.cm <= 250
   : h.unit === "ft" ? Number.isInteger(h.ft) && Number.isInteger(h.in) && h.ft >= 3 && h.ft <= 8 && h.in >= 0 && h.in <= 11 : false);
@@ -1812,7 +1812,7 @@ const weightText = w => w.v + " " + w.unit;
 /* Gender, age, height and weight show on the plan and in the email; age also adds a safety tip. */
 function bodyTags(p) {
   const t = [];
-  if (p.gender && p.gender !== "na" && GENDERS[p.gender]) t.push(GENDERS[p.gender]);
+  if (GENDERS[p.gender]) t.push(GENDERS[p.gender]);
   if (validAge(p.age)) t.push(p.age + " years old");
   if (validHeight(p.height)) t.push(heightText(p.height));
   if (validWeight(p.weight)) t.push(weightText(p.weight));
@@ -1832,7 +1832,7 @@ try {
   const saved = JSON.parse(localStorage.getItem(PROFILE_KEY));
   if (validProfile(saved)) profile = {
     name: String(saved.name || "").slice(0, 30),
-    gender: GENDERS[saved.gender] ? saved.gender : null,
+    gender: saved.gender === "na" ? "other" : GENDERS[saved.gender] ? saved.gender : null,
     age: validAge(saved.age) ? saved.age : null,
     height: validHeight(saved.height) ? saved.height : null,
     weight: validWeight(saved.weight) ? saved.weight : null,
