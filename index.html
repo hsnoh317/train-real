@@ -872,6 +872,20 @@ body::before {
 #info-name:focus-visible, .text-in:focus-visible { outline: 2px solid var(--sport); outline-offset: 1px; border-color: transparent; }
 /* Step 2: number answers (age, height, weight) with a unit switch */
 .field.num-field { gap: 1rem; }
+/* Age, height and weight: the answer sits in the middle of the page, a little above centre
+   so it stays clear of the phone keyboard. */
+#s-age .screen-body, #s-height .screen-body, #s-weight .screen-body { grid-template-rows: auto 1fr; }
+.info-form.num-page {
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 10vh;
+}
+.info-form.num-page .field { justify-items: center; }
+.info-form.num-page .unit-toggle { justify-self: center; }
+.info-form.num-page .num-row { justify-content: center; }
+.info-form.num-page .text-in.num { width: 9rem; font-size: 2.6rem; padding: .85rem .6rem; }
+.info-form.num-page #in-hft, .info-form.num-page #in-hin { width: 6rem; }
 .num-row { display: flex; align-items: center; gap: .6rem; }
 .num-row[hidden] { display: none; }
 .text-in.num {
@@ -1158,7 +1172,7 @@ body::before {
         <div class="eyebrow">Step 2 · 3 of 8</div>
         <h2 class="screen-title" id="age-title">Age</h2>
       </div>
-      <form class="info-form" id="f-age" data-field="age" novalidate>
+      <form class="info-form num-page" id="f-age" data-field="age" novalidate>
         <div class="field">
           <div class="num-row"><input id="in-age" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-labelledby="age-title"><span class="unit">years old</span></div>
         </div>
@@ -1181,7 +1195,7 @@ body::before {
         <div class="eyebrow">Step 2 · 4 of 8</div>
         <h2 class="screen-title" id="height-title">Height</h2>
       </div>
-      <form class="info-form" id="f-height" data-field="height" novalidate>
+      <form class="info-form num-page" id="f-height" data-field="height" novalidate>
         <div class="field num-field">
           <div class="unit-toggle" role="radiogroup" aria-label="Height unit"><label><input type="radio" name="hunit" value="cm"><span>cm</span></label><label><input type="radio" name="hunit" value="ft"><span>ft / in</span></label></div>
           <div class="num-row" data-unit="cm"><input id="in-hcm" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-label="Height in centimetres"><span class="unit">cm</span></div>
@@ -1206,7 +1220,7 @@ body::before {
         <div class="eyebrow">Step 2 · 5 of 8</div>
         <h2 class="screen-title" id="weight-title">Weight</h2>
       </div>
-      <form class="info-form" id="f-weight" data-field="weight" novalidate>
+      <form class="info-form num-page" id="f-weight" data-field="weight" novalidate>
         <div class="field num-field">
           <div class="unit-toggle" role="radiogroup" aria-label="Weight unit"><label><input type="radio" name="wunit" value="kg"><span>kg</span></label><label><input type="radio" name="wunit" value="lb"><span>lb</span></label></div>
           <div class="num-row"><input id="in-w" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="decimal" maxlength="5" aria-label="Weight"><span class="unit" id="w-unit">kg</span></div>
