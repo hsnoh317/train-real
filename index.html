@@ -915,6 +915,7 @@ body::before {
   text-transform: uppercase;
   color: var(--muted);
 }
+.unit.unit-lower { text-transform: none; font-size: .95rem; }
 .unit-toggle {
   display: inline-flex;
   justify-self: start;
@@ -1186,7 +1187,7 @@ body::before {
       </div>
       <form class="info-form num-page" id="f-age" data-field="age" novalidate>
         <div class="field">
-          <div class="num-row"><input id="in-age" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-labelledby="age-title"><span class="unit">years old</span></div>
+          <div class="num-row"><input id="in-age" class="text-in num" type="text" autocomplete="off" enterkeyhint="next" inputmode="numeric" pattern="[0-9]*" maxlength="3" aria-labelledby="age-title"><span class="unit unit-lower">yrs</span></div>
         </div>
         <p class="mail-error" id="e-age" hidden></p>
       </form>
