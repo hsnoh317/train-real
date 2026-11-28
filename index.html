@@ -1225,7 +1225,7 @@ body::before {
     <div class="thanks">
       <h2 class="thanks-title" id="thanks-title"><span>Thank you!</span></h2>
       <p class="thanks-msg" id="thanks-msg"></p>
-      <p class="thanks-note" id="thanks-note" hidden>If nothing opened, copy the workout and paste it into an email to yourself.</p>
+      <p class="thanks-note" id="thanks-note" hidden></p>
       <button class="copy-btn" type="button" id="mail-copy">Copy the workout</button>
       <textarea id="mail-fallback" readonly hidden aria-label="Workout text to copy"></textarea>
     </div>
@@ -2008,19 +2008,18 @@ document.getElementById("skip-btn").addEventListener("click", () => { emailedTo 
 mailCopy.addEventListener("click", () => copyText(sessionText(current), mailCopy, mailFallback, "Copy the workout"));
 
 function renderThanks() {
-  const s = SPORTS[current];
-  const msg = document.getElementById("thanks-msg");
   const note = document.getElementById("thanks-note");
   mailFallback.hidden = true;
   mailCopy.textContent = "Copy the workout";
-  msg.replaceChildren();
+  const name = prof().name;
+  document.getElementById("thanks-msg").textContent =
+    (name ? name + ", your" : "Your") + " workout is ready. See you at the gym!";
+  note.replaceChildren();
   if (emailedTo) {
-    msg.append((prof().name ? prof().name + ", your" : "Your") + " email app should now show your " + s.name + " workout, addressed to ");
-    msg.append(el("b", null, emailedTo));
-    msg.append(". Press send there to keep it.");
+    note.append("Your email app should now show the workout, addressed to ", el("b", null, emailedTo),
+      ". Press send there to keep it. If nothing opened, copy the workout and paste it into an email to yourself.");
     note.hidden = false;
   } else {
-    msg.textContent = (prof().name ? prof().name + ", your " : "Your ") + s.name + " workout is ready. See you at the gym.";
     note.hidden = true;
   }
 }
