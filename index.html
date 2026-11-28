@@ -874,13 +874,24 @@ body::before {
 .field.num-field { gap: 1rem; }
 /* Age, height and weight: the answer sits in the middle of the page, a little above centre
    so it stays clear of the phone keyboard. */
+/* The step label stays top-left like every page; the question word and its box sit together in
+   the middle, slightly above centre so the keyboard doesn't cover them. */
 #s-age .screen-body, #s-height .screen-body, #s-weight .screen-body {
-  align-content: center;
+  grid-template-rows: auto 1fr auto auto 1.4fr;
+  gap: 0;
   justify-items: center;
-  text-align: center;
-  gap: 1.6rem;
-  padding-bottom: calc(1.75rem + 10vh);
 }
+#s-age .screen-body > div:first-child,
+#s-height .screen-body > div:first-child,
+#s-weight .screen-body > div:first-child { display: contents; }
+#s-age .eyebrow, #s-height .eyebrow, #s-weight .eyebrow { grid-row: 1; justify-self: start; }
+#s-age .screen-title, #s-height .screen-title, #s-weight .screen-title {
+  grid-row: 3;
+  margin: 0 0 1.4rem;
+  text-align: center;
+  font-size: clamp(3.4rem, 17vw, 5rem);
+}
+.info-form.num-page { grid-row: 4; text-align: center; }
 .info-form.num-page { justify-items: center; }
 .info-form.num-page .field { justify-items: center; }
 .info-form.num-page .unit-toggle { justify-self: center; }
