@@ -874,13 +874,14 @@ body::before {
 .field.num-field { gap: 1rem; }
 /* Age, height and weight: the answer sits in the middle of the page, a little above centre
    so it stays clear of the phone keyboard. */
-#s-age .screen-body, #s-height .screen-body, #s-weight .screen-body { grid-template-rows: auto 1fr; }
-.info-form.num-page {
+#s-age .screen-body, #s-height .screen-body, #s-weight .screen-body {
   align-content: center;
   justify-items: center;
   text-align: center;
-  padding-bottom: 10vh;
+  gap: 1.6rem;
+  padding-bottom: calc(1.75rem + 10vh);
 }
+.info-form.num-page { justify-items: center; }
 .info-form.num-page .field { justify-items: center; }
 .info-form.num-page .unit-toggle { justify-self: center; }
 .info-form.num-page .num-row { justify-content: center; }
